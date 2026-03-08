@@ -37,48 +37,50 @@ const Auth = () => {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <h1 className="text-2xl font-bold tracking-tight font-display text-foreground">
+        <div className="mb-10 text-center">
+          <h1 className="text-3xl font-black tracking-tight text-foreground">
             WORKSHOP<span className="text-primary">TRACKER</span>
           </h1>
-          <p className="mt-2 text-sm text-muted-foreground">
+          <p className="mt-3 text-sm text-muted-foreground">
             Трекер доходов и рабочего времени
           </p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label className="label-industrial block mb-1.5">Email</label>
-            <input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="input-industrial w-full"
-              placeholder="mail@example.com"
-              required
-            />
-          </div>
-          <div>
-            <label className="label-industrial block mb-1.5">Пароль</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="input-industrial w-full"
-              placeholder="••••••••"
-              required
-              minLength={6}
-            />
-          </div>
+        <div className="glass-panel p-6 md:p-8">
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div>
+              <label className="label-industrial block mb-1.5">Email</label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="input-industrial w-full"
+                placeholder="mail@example.com"
+                required
+              />
+            </div>
+            <div>
+              <label className="label-industrial block mb-1.5">Пароль</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="input-industrial w-full"
+                placeholder="••••••••"
+                required
+                minLength={6}
+              />
+            </div>
 
-          <Button type="submit" className="w-full h-12 text-base font-semibold" disabled={loading}>
-            {loading ? '...' : isLogin ? 'Войти' : 'Создать аккаунт'}
-          </Button>
-        </form>
+            <Button type="submit" className="w-full h-14 text-base font-bold rounded-xl shadow-lg shadow-primary/20" disabled={loading}>
+              {loading ? '...' : isLogin ? 'Войти' : 'Создать аккаунт'}
+            </Button>
+          </form>
+        </div>
 
         <button
           onClick={() => setIsLogin(!isLogin)}
-          className="mt-4 w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
+          className="mt-5 w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           {isLogin ? 'Нет аккаунта? Зарегистрироваться' : 'Уже есть аккаунт? Войти'}
         </button>

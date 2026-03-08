@@ -18,7 +18,6 @@ function calcHoursBetween(start: string, end: string): number {
   const diff = (eh * 60 + em) - (sh * 60 + sm);
   if (diff <= 0) return 0;
   const startMinutes = sh * 60 + sm;
-  // Вычитаем 1 час на обед, если начало до 11:00
   const lunchDeduction = startMinutes < 11 * 60 ? 60 : 0;
   const net = diff - lunchDeduction;
   return net > 0 ? Math.round(net / 30) * 0.5 : 0;
@@ -39,12 +38,10 @@ const Index = () => {
   const [productQuantity, setProductQuantity] = useState(0);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  // Workday time
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const workdayHours = useMemo(() => calcHoursBetween(startTime, endTime), [startTime, endTime]);
 
-  // Fetch existing time log for selected date
   const { data: timeLog } = useQuery({
     queryKey: ['daily_time_logs', date],
     queryFn: async () => {
@@ -91,7 +88,6 @@ const Index = () => {
     onError: (e: any) => toast.error(e.message),
   });
 
-  // Fetch products for dropdown
   const { data: products = [] } = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
@@ -101,7 +97,6 @@ const Index = () => {
     },
   });
 
-  // Fetch today's entries
   const { data: todayEntries = [] } = useQuery({
     queryKey: ['work_entries', date],
     queryFn: async () => {
@@ -197,30 +192,35 @@ const Index = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4 space-y-6">
-      {/* Live total card */}
-      <div className="stat-card text-center">
-        <p className="label-industrial text-xs">Итого за запись</p>
-        <p className="text-3xl font-bold font-display text-primary mt-1">{formatRub(liveTotal)}</p>
-        <p className="text-xs text-muted-foreground mt-1">Всего за {date}: {formatRub(todayTotal)}</p>
+    <div className="max-w-2xl mx-auto p-4 md:p-6 space-y-6">
+      {/* Hero total card — glowing */}
+      <div className="stat-card-hero text-center">
+        <p className="label-industrial text-xs mb-2">Сумма текущей записи</p>
+        <p className="hero-number">{formatRub(liveTotal)}</p>
+        <div className="mt-3 pt-3 border-t border-border/50">
+          <p className="text-sm text-muted-foreground">
+            Итого за <span className="font-display text-foreground">{date}</span>
+          </p>
+          <p className="text-xl font-bold font-display text-foreground mt-0.5">{formatRub(todayTotal)}</p>
+        </div>
       </div>
 
       {/* Workday time block */}
       <div className="stat-card space-y-3">
         <div className="flex items-center gap-2">
-          <Clock size={14} className="text-muted-foreground" />
+          <Clock size={14} className="text-secondary" />
           <p className="label-industrial text-xs">Рабочий день</p>
         </div>
         <div className="grid grid-cols-3 gap-3 items-end">
           <div>
-            <label className="text-xs text-muted-foreground block mb-1">Начало</label>
+            <label className="text-xs text-muted-foreground block mb-1.5">Начало</label>
             <input type="time" step="600" value={startTime} onChange={e => setStartTime(e.target.value)} className="input-industrial w-full" />
           </div>
           <div>
-            <label className="text-xs text-muted-foreground block mb-1">Конец</label>
+            <label className="text-xs text-muted-foreground block mb-1.5">Конец</label>
             <input type="time" step="600" value={endTime} onChange={e => setEndTime(e.target.value)} className="input-industrial w-full" />
           </div>
-          <div className="flex flex-col items-center gap-1">
+          <div className="flex flex-col items-center gap-1.5">
             {workdayHours > 0 && <span className="text-sm font-display font-bold text-foreground">{workdayHours} ч</span>}
             <Button
               type="button"
@@ -228,7 +228,7 @@ const Index = () => {
               size="sm"
               onClick={() => saveTimeMutation.mutate()}
               disabled={!startTime || !endTime || saveTimeMutation.isPending}
-              className="w-full"
+              className="w-full rounded-xl"
             >
               {timeLog ? 'Обновить' : 'Сохранить'}
             </Button>
@@ -264,11 +264,11 @@ const Index = () => {
           <p className="label-industrial text-xs">Время</p>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-xs text-muted-foreground block mb-1">Часы</label>
+              <label className="text-xs text-muted-foreground block mb-1.5">Часы</label>
               <input type="number" min={0} step={0.5} value={hours || ''} onChange={e => setHours(Number(e.target.value))} className="input-industrial w-full" placeholder="0" />
             </div>
             <div>
-              <label className="text-xs text-muted-foreground block mb-1">Тип</label>
+              <label className="text-xs text-muted-foreground block mb-1.5">Тип</label>
               <select value={hourType} onChange={e => setHourType(e.target.value as HourType)} className="input-industrial w-full">
                 {Object.entries(HOUR_TYPE_LABELS).map(([value, label]) => (
                   <option key={value} value={value}>{label}</option>
@@ -283,11 +283,11 @@ const Index = () => {
           <p className="label-industrial text-xs">Нестинг</p>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-xs text-muted-foreground block mb-1">Целые листы</label>
+              <label className="text-xs text-muted-foreground block mb-1.5">Целые листы</label>
               <input type="number" min={0} value={fullSheets || ''} onChange={e => setFullSheets(Number(e.target.value))} className="input-industrial w-full" placeholder="0" />
             </div>
             <div>
-              <label className="text-xs text-muted-foreground block mb-1">Половины</label>
+              <label className="text-xs text-muted-foreground block mb-1.5">Половины</label>
               <input type="number" min={0} value={halfSheets || ''} onChange={e => setHalfSheets(Number(e.target.value))} className="input-industrial w-full" placeholder="0" />
             </div>
           </div>
@@ -299,7 +299,7 @@ const Index = () => {
             <p className="label-industrial text-xs">Серийная мебель</p>
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="text-xs text-muted-foreground block mb-1">Изделие</label>
+                <label className="text-xs text-muted-foreground block mb-1.5">Изделие</label>
                 <select value={productId} onChange={e => setProductId(e.target.value)} className="input-industrial w-full">
                   <option value="">—</option>
                   {products.map(p => (
@@ -308,19 +308,19 @@ const Index = () => {
                 </select>
               </div>
               <div>
-                <label className="text-xs text-muted-foreground block mb-1">Кол-во</label>
+                <label className="text-xs text-muted-foreground block mb-1.5">Кол-во</label>
                 <input type="number" min={0} value={productQuantity || ''} onChange={e => setProductQuantity(Number(e.target.value))} className="input-industrial w-full" placeholder="0" />
               </div>
             </div>
           </div>
         )}
 
-        <div className="flex gap-2">
-          <Button type="submit" className="flex-1 h-12 text-base font-semibold" disabled={saveMutation.isPending}>
-            {editingId ? 'Обновить запись' : 'Сохранить'}
+        <div className="flex gap-3">
+          <Button type="submit" className="flex-1 h-14 text-base font-bold rounded-xl shadow-lg shadow-primary/20" disabled={saveMutation.isPending}>
+            {editingId ? 'Обновить запись' : 'Добавить работу'}
           </Button>
           {editingId && (
-            <Button type="button" variant="outline" onClick={resetForm} className="h-12">
+            <Button type="button" variant="outline" onClick={resetForm} className="h-14 rounded-xl btn-olive">
               Отмена
             </Button>
           )}
@@ -334,22 +334,22 @@ const Index = () => {
           {todayEntries.map((entry: any) => (
             <div key={entry.id} className="stat-card flex items-center justify-between gap-3">
               <div className="min-w-0 flex-1">
-                <p className="text-sm font-medium text-foreground truncate">
+                <p className="text-sm font-semibold text-foreground truncate">
                   {entry.project_name}{entry.item_name ? ` — ${entry.item_name}` : ''}
                 </p>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-muted-foreground mt-0.5">
                   {entry.hours > 0 && `${entry.hours}ч ${HOUR_TYPE_LABELS[entry.hour_type] || ''}`}
                   {entry.full_sheets > 0 && ` · ${entry.full_sheets} лист.`}
                   {entry.half_sheets > 0 && ` · ${entry.half_sheets}×½`}
                   {entry.product_quantity > 0 && entry.products && ` · ${entry.products.name} ×${entry.product_quantity}`}
                 </p>
               </div>
-              <p className="font-display font-bold text-primary whitespace-nowrap">{formatRub(entry.total_amount)}</p>
+              <p className="font-display font-bold text-primary whitespace-nowrap text-lg">{formatRub(entry.total_amount)}</p>
               <div className="flex gap-1 shrink-0">
-                <button onClick={() => handleEdit(entry)} className="p-2 text-muted-foreground hover:text-foreground transition-colors">
+                <button onClick={() => handleEdit(entry)} className="p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted/50">
                   <Pencil size={14} />
                 </button>
-                <button onClick={() => deleteMutation.mutate(entry.id)} className="p-2 text-muted-foreground hover:text-destructive transition-colors">
+                <button onClick={() => deleteMutation.mutate(entry.id)} className="p-2 text-muted-foreground hover:text-destructive transition-colors rounded-lg hover:bg-muted/50">
                   <Trash2 size={14} />
                 </button>
               </div>
