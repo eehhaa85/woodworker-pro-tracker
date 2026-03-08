@@ -76,6 +76,7 @@ export type Database = {
       }
       user_settings: {
         Row: {
+          background_opacity: number
           background_url: string | null
           created_at: string
           id: string
@@ -88,6 +89,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          background_opacity?: number
           background_url?: string | null
           created_at?: string
           id?: string
@@ -100,6 +102,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          background_opacity?: number
           background_url?: string | null
           created_at?: string
           id?: string
