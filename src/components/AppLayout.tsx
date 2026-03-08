@@ -18,7 +18,7 @@ const AppLayout = () => {
     <div
       className="min-h-screen bg-background flex flex-col"
       style={settings.background_url ? {
-        backgroundImage: `linear-gradient(to bottom, hsl(220 14% 10% / 0.85), hsl(220 14% 10% / 0.92)), url(${settings.background_url})`,
+        backgroundImage: `linear-gradient(to bottom, hsl(220 14% 10% / ${settings.background_opacity}), hsl(220 14% 10% / ${Math.min(settings.background_opacity + 0.07, 1)})), url(${settings.background_url})`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'fixed',
