@@ -1,18 +1,29 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
-import { LayoutDashboard, PlusCircle, BookOpen, LogOut } from 'lucide-react';
+import { useSettings } from '@/hooks/useSettings';
+import { LayoutDashboard, PlusCircle, BookOpen, LogOut, Settings } from 'lucide-react';
 
 const navItems = [
   { to: '/', icon: PlusCircle, label: 'Запись' },
   { to: '/dashboard', icon: LayoutDashboard, label: 'Статистика' },
   { to: '/catalog', icon: BookOpen, label: 'Справочник' },
+  { to: '/settings', icon: Settings, label: 'Настройки' },
 ];
 
 const AppLayout = () => {
   const { signOut } = useAuth();
+  const { settings } = useSettings();
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div
+      className="min-h-screen bg-background flex flex-col"
+      style={settings.background_url ? {
+        backgroundImage: `linear-gradient(to bottom, hsl(220 14% 10% / 0.85), hsl(220 14% 10% / 0.92)), url(${settings.background_url})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundAttachment: 'fixed',
+      } : undefined}
+    >
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-md px-5 py-4 flex items-center justify-between shrink-0 sticky top-0 z-40">
         <h1 className="text-lg font-black tracking-tight text-foreground">
@@ -53,7 +64,7 @@ const AppLayout = () => {
         <Outlet />
       </main>
 
-      {/* Mobile bottom nav — glassmorphism */}
+      {/* Mobile bottom nav */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 border-t border-border bg-card/70 backdrop-blur-xl flex z-50">
         {navItems.map(({ to, icon: Icon, label }) => (
           <NavLink
