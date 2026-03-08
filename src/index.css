@@ -6,49 +6,49 @@
 
 @layer base {
   :root {
-    --background: 200 12% 12%;
-    --foreground: 210 7% 82%;
+    --background: 200 8% 22%;
+    --foreground: 40 5% 88%;
 
-    --card: 200 10% 15%;
-    --card-foreground: 210 7% 82%;
+    --card: 200 7% 26%;
+    --card-foreground: 40 5% 88%;
 
-    --popover: 200 10% 17%;
-    --popover-foreground: 210 7% 82%;
+    --popover: 200 7% 28%;
+    --popover-foreground: 40 5% 88%;
 
-    --primary: 204 30% 70%;
-    --primary-foreground: 200 12% 12%;
+    --primary: 204 25% 65%;
+    --primary-foreground: 200 8% 18%;
 
-    --secondary: 200 8% 20%;
-    --secondary-foreground: 210 7% 68%;
+    --secondary: 195 6% 32%;
+    --secondary-foreground: 40 5% 75%;
 
-    --muted: 200 8% 18%;
-    --muted-foreground: 210 8% 50%;
+    --muted: 195 6% 30%;
+    --muted-foreground: 30 4% 58%;
 
-    --accent: 38 11% 45%;
-    --accent-foreground: 210 7% 88%;
+    --accent: 38 14% 48%;
+    --accent-foreground: 40 5% 90%;
 
-    --destructive: 0 55% 48%;
+    --destructive: 0 45% 50%;
     --destructive-foreground: 0 0% 95%;
 
-    --border: 200 8% 22%;
-    --input: 200 8% 20%;
-    --ring: 204 30% 70%;
+    --border: 195 6% 34%;
+    --input: 195 6% 30%;
+    --ring: 204 25% 65%;
 
     --radius: 0.625rem;
 
-    --sidebar-background: 200 10% 13%;
-    --sidebar-foreground: 210 7% 68%;
-    --sidebar-primary: 204 30% 70%;
-    --sidebar-primary-foreground: 200 12% 12%;
-    --sidebar-accent: 200 8% 18%;
-    --sidebar-accent-foreground: 210 7% 82%;
-    --sidebar-border: 200 8% 20%;
-    --sidebar-ring: 204 30% 70%;
+    --sidebar-background: 200 7% 24%;
+    --sidebar-foreground: 30 4% 68%;
+    --sidebar-primary: 204 25% 65%;
+    --sidebar-primary-foreground: 200 8% 18%;
+    --sidebar-accent: 195 6% 30%;
+    --sidebar-accent-foreground: 40 5% 85%;
+    --sidebar-border: 195 6% 32%;
+    --sidebar-ring: 204 25% 65%;
 
-    --steel: 210 8% 57%;
-    --steel-light: 210 7% 72%;
-    --success: 160 35% 48%;
-    --warning: 38 40% 55%;
+    --steel: 30 4% 50%;
+    --steel-light: 30 5% 65%;
+    --success: 160 28% 52%;
+    --warning: 38 35% 58%;
 
     --font-display: 'JetBrains Mono', monospace;
     --font-body: 'Inter', sans-serif;
