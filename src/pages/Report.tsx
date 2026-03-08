@@ -77,12 +77,13 @@ const Report = () => {
         totalNesting += sheets;
         totalTariff += Number(e.hours);
 
-        let desc = e.project_name || '';
+        const isSerial = e.product_quantity > 0 && (e as any).products;
+        let desc = isSerial ? 'TR' : (e.project_name || '');
         if (e.item_name) desc += ` ${e.item_name}`;
         if (sheets > 0) desc += ` ${sheets}л.`;
         if (Number(e.hours) > 0) desc += ` ${e.hours}ч.`;
-        if (e.product_quantity > 0 && (e as any).products) {
-          desc += ` ${(e as any).products.name}—${formatRub((e as any).products.price)}`;
+        if (isSerial) {
+          desc += ` ${(e as any).products.name}×${e.product_quantity}—${formatRub((e as any).products.price * e.product_quantity)}`;
         }
         descriptions.push(desc.trim());
       }
@@ -102,22 +103,26 @@ const Report = () => {
     return days;
   }, [entries, timeLogs, month, monthStart]);
 
-  // Project summary
+  // Project summary (case-insensitive grouping, serial furniture = TR)
   const projectSummary = useMemo(() => {
-    const map = new Map<string, { hours: number; nesting: number; serial: number }>();
+    const map = new Map<string, { displayName: string; hours: number; nesting: number; serial: number }>();
 
     for (const e of entries) {
-      const key = (e.project_name || 'Без проекта').trim();
-      const existing = map.get(key) || { hours: 0, nesting: 0, serial: 0 };
+      // Serial furniture goes under "TR"
+      const isSerial = e.product_quantity > 0 && (e as any).products;
+      const rawName = isSerial ? 'TR' : (e.project_name || '').trim();
+      if (!rawName && !isSerial) continue;
+      const key = rawName.toLowerCase();
+      const existing = map.get(key) || { displayName: rawName, hours: 0, nesting: 0, serial: 0 };
       existing.hours += Number(e.hours);
       existing.nesting += Number(e.full_sheets) + Number(e.half_sheets) * 0.5;
-      if (e.product_quantity > 0 && (e as any).products) {
+      if (isSerial) {
         existing.serial += (e as any).products.price * e.product_quantity;
       }
       map.set(key, existing);
     }
 
-    return Array.from(map.entries()).map(([name, data]) => ({ name, ...data }));
+    return Array.from(map.values()).map(({ displayName, ...data }) => ({ name: displayName, ...data }));
   }, [entries]);
 
   // Totals
