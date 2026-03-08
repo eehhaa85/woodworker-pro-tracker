@@ -195,9 +195,9 @@ const Report = () => {
             onChange={(e) => setMonth(e.target.value)}
             className="input-industrial"
           />
-          <Button onClick={handleDownload} className="h-12 rounded-xl font-bold gap-2">
+          <Button onClick={handleDownload} disabled={generating} className="h-12 rounded-xl font-bold gap-2">
             <FileDown size={18} />
-            Скачать PDF
+            {generating ? 'Генерация...' : 'Скачать PDF'}
           </Button>
         </div>
       </div>
