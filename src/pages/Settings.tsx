@@ -208,6 +208,36 @@ const Settings = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
+
+              {/* Opacity slider */}
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <label className="text-xs text-muted-foreground">Прозрачность затемнения</label>
+                  <span className="text-xs font-display text-foreground">{Math.round(settings.background_opacity * 100)}%</span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  step={5}
+                  value={Math.round(settings.background_opacity * 100)}
+                  onChange={async (e) => {
+                    const opacity = Number(e.target.value) / 100;
+                    if (!settings.id) return;
+                    await supabase
+                      .from('user_settings')
+                      .update({ background_opacity: opacity } as any)
+                      .eq('id', settings.id);
+                    queryClient.invalidateQueries({ queryKey: ['user_settings'] });
+                  }}
+                  className="w-full accent-primary h-2 rounded-full appearance-none bg-muted cursor-pointer"
+                />
+                <div className="flex justify-between text-[10px] text-muted-foreground mt-1">
+                  <span>Прозрачно</span>
+                  <span>Затемнено</span>
+                </div>
+              </div>
+
               <Button
                 variant="outline"
                 onClick={handleRemoveBackground}
