@@ -19,6 +19,7 @@ const Settings = () => {
   const [rateFullSheet, setRateFullSheet] = useState<number | null>(null);
   const [rateHalfSheet, setRateHalfSheet] = useState<number | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [localOpacity, setLocalOpacity] = useState<number | null>(null);
 
   // Use local state if edited, otherwise settings from DB
   const val = (local: number | null, fallback: number) => local ?? fallback;
