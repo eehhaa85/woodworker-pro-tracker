@@ -9,6 +9,7 @@ import Index from "./pages/Index";
 import Dashboard from "./pages/Dashboard";
 import Catalog from "./pages/Catalog";
 import Settings from "./pages/Settings";
+import Report from "./pages/Report";
 import Auth from "./pages/Auth";
 import AppLayout from "./components/AppLayout";
 import NotFound from "./pages/NotFound";
@@ -43,6 +44,7 @@ const App = () => (
                 <Route path="/" element={<Index />} />
                 <Route path="/dashboard" element={<Dashboard />} />
                 <Route path="/catalog" element={<Catalog />} />
+                <Route path="/report" element={<Report />} />
                 <Route path="/settings" element={<Settings />} />
               </Route>
               <Route path="*" element={<NotFound />} />
