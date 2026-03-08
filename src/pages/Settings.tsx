@@ -13,6 +13,7 @@ const Settings = () => {
   const queryClient = useQueryClient();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [fullName, setFullName] = useState<string | null>(null);
   const [rateStandard, setRateStandard] = useState<number | null>(null);
   const [rateOvertime, setRateOvertime] = useState<number | null>(null);
   const [rateSickLeave, setRateSickLeave] = useState<number | null>(null);
@@ -28,6 +29,7 @@ const Settings = () => {
     mutationFn: async () => {
       const payload = {
         user_id: user!.id,
+        full_name: fullName ?? settings.full_name,
         rate_standard: val(rateStandard, settings.rate_standard),
         rate_overtime: val(rateOvertime, settings.rate_overtime),
         rate_sick_leave: val(rateSickLeave, settings.rate_sick_leave),
@@ -51,8 +53,8 @@ const Settings = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['user_settings'] });
-      toast.success('Тарифы сохранены');
-      // Reset local state
+      toast.success('Настройки сохранены');
+      setFullName(null);
       setRateStandard(null);
       setRateOvertime(null);
       setRateSickLeave(null);
@@ -139,6 +141,21 @@ const Settings = () => {
 
   return (
     <div className="max-w-lg mx-auto p-4 md:p-6 space-y-8">
+      {/* Full name */}
+      <div>
+        <h2 className="text-lg font-black text-foreground mb-1">ФИО</h2>
+        <p className="text-xs text-muted-foreground mb-5">Будет подставляться в табель</p>
+        <div className="stat-card">
+          <input
+            type="text"
+            placeholder="Иванов Иван Иванович"
+            value={fullName ?? settings.full_name}
+            onChange={e => setFullName(e.target.value)}
+            className="input-industrial w-full"
+          />
+        </div>
+      </div>
+
       {/* Rates */}
       <div>
         <h2 className="text-lg font-black text-foreground mb-1">Тарифы</h2>
