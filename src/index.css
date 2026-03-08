@@ -6,49 +6,49 @@
 
 @layer base {
   :root {
-    --background: 150 12% 8%;
-    --foreground: 50 8% 85%;
+    --background: 95 18% 18%;
+    --foreground: 60 6% 88%;
 
-    --card: 155 8% 12%;
-    --card-foreground: 50 8% 85%;
+    --card: 90 12% 22%;
+    --card-foreground: 60 6% 88%;
 
-    --popover: 155 8% 14%;
-    --popover-foreground: 50 8% 85%;
+    --popover: 90 10% 24%;
+    --popover-foreground: 60 6% 88%;
 
-    --primary: 78 55% 44%;
-    --primary-foreground: 150 12% 6%;
+    --primary: 78 55% 50%;
+    --primary-foreground: 160 15% 6%;
 
-    --secondary: 155 6% 16%;
-    --secondary-foreground: 50 6% 68%;
+    --secondary: 90 8% 26%;
+    --secondary-foreground: 60 5% 72%;
 
-    --muted: 155 5% 14%;
-    --muted-foreground: 50 5% 50%;
+    --muted: 90 8% 24%;
+    --muted-foreground: 60 4% 55%;
 
-    --accent: 195 18% 50%;
-    --accent-foreground: 50 8% 90%;
+    --accent: 192 25% 55%;
+    --accent-foreground: 160 15% 6%;
 
-    --destructive: 0 50% 45%;
+    --destructive: 0 50% 48%;
     --destructive-foreground: 0 0% 95%;
 
-    --border: 155 6% 18%;
-    --input: 160 10% 8%;
-    --ring: 78 55% 44%;
+    --border: 90 8% 28%;
+    --input: 160 12% 9%;
+    --ring: 78 55% 50%;
 
     --radius: 0.625rem;
 
-    --sidebar-background: 150 10% 9%;
-    --sidebar-foreground: 50 6% 65%;
-    --sidebar-primary: 78 55% 44%;
-    --sidebar-primary-foreground: 150 12% 6%;
-    --sidebar-accent: 155 5% 14%;
-    --sidebar-accent-foreground: 50 8% 82%;
-    --sidebar-border: 155 6% 16%;
-    --sidebar-ring: 78 55% 44%;
+    --sidebar-background: 95 14% 16%;
+    --sidebar-foreground: 60 5% 68%;
+    --sidebar-primary: 78 55% 50%;
+    --sidebar-primary-foreground: 160 15% 6%;
+    --sidebar-accent: 90 8% 22%;
+    --sidebar-accent-foreground: 60 6% 85%;
+    --sidebar-border: 90 8% 26%;
+    --sidebar-ring: 78 55% 50%;
 
-    --steel: 50 4% 45%;
-    --steel-light: 50 5% 60%;
-    --success: 78 45% 48%;
-    --warning: 42 50% 55%;
+    --steel: 192 15% 45%;
+    --steel-light: 192 20% 60%;
+    --success: 78 45% 50%;
+    --warning: 42 50% 58%;
 
     --font-display: 'JetBrains Mono', monospace;
     --font-body: 'Inter', sans-serif;
@@ -66,9 +66,9 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     background-image:
-      radial-gradient(ellipse at 20% 50%, hsl(78 30% 12% / 0.4) 0%, transparent 50%),
-      radial-gradient(ellipse at 80% 20%, hsl(195 15% 12% / 0.3) 0%, transparent 40%),
-      radial-gradient(ellipse at 50% 100%, hsl(150 10% 6% / 0.5) 0%, transparent 50%);
+      radial-gradient(ellipse at 30% 40%, hsl(85 20% 22% / 0.5) 0%, transparent 50%),
+      radial-gradient(ellipse at 70% 80%, hsl(95 15% 16% / 0.4) 0%, transparent 45%),
+      radial-gradient(ellipse at 90% 10%, hsl(192 15% 18% / 0.2) 0%, transparent 40%);
     background-attachment: fixed;
   }
 
@@ -95,11 +95,11 @@
 @layer components {
   .stat-card {
     @apply bg-card border border-border rounded-lg p-4 md:p-6;
-    box-shadow: 0 1px 3px hsl(150 12% 4% / 0.4), inset 0 1px 0 hsl(78 20% 20% / 0.06);
+    box-shadow: 0 2px 6px hsl(160 15% 4% / 0.4), inset 0 1px 0 hsl(90 10% 28% / 0.08);
   }
   .input-industrial {
     @apply bg-input border border-border rounded-md px-4 py-3 text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-all text-base;
-    box-shadow: inset 0 2px 4px hsl(150 12% 4% / 0.3);
+    box-shadow: inset 0 2px 5px hsl(160 15% 3% / 0.5);
   }
   .label-industrial {
     @apply text-sm font-medium text-muted-foreground uppercase tracking-wider;
