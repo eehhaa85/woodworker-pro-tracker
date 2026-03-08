@@ -6,57 +6,58 @@
 
 @layer base {
   :root {
-    /* Light stone background - #CDD1D5 */
-    --background: 210 7% 82%;
-    /* Dark slate foreground - #242C30 */
-    --foreground: 200 12% 16%;
+    /* Warm stone background */
+    --background: 30 12% 78%;
+    /* Deep charcoal foreground */
+    --foreground: 200 15% 14%;
 
-    /* Cards slightly darker than background */
-    --card: 210 8% 76%;
-    --card-foreground: 200 12% 16%;
+    /* Cards — warm sandstone */
+    --card: 32 14% 72%;
+    --card-foreground: 200 15% 14%;
 
-    --popover: 210 8% 78%;
-    --popover-foreground: 200 12% 16%;
+    --popover: 30 12% 74%;
+    --popover-foreground: 200 15% 14%;
 
-    /* Warm taupe primary - #7E7565 */
-    --primary: 38 12% 45%;
-    --primary-foreground: 210 7% 95%;
+    /* Rich amber-bronze primary */
+    --primary: 32 35% 40%;
+    --primary-foreground: 35 20% 95%;
 
-    /* Medium slate - #89929B */
-    --secondary: 210 8% 57%;
-    --secondary-foreground: 210 7% 95%;
+    /* Slate blue secondary */
+    --secondary: 205 18% 50%;
+    --secondary-foreground: 210 10% 96%;
 
-    --muted: 210 6% 72%;
-    --muted-foreground: 200 10% 35%;
+    --muted: 30 8% 68%;
+    --muted-foreground: 200 12% 32%;
 
-    /* Ocean teal accent - inspired by the blue tones */
-    --accent: 195 25% 55%;
-    --accent-foreground: 200 12% 12%;
+    /* Deep teal accent — ocean water */
+    --accent: 195 35% 42%;
+    --accent-foreground: 195 15% 96%;
 
-    --destructive: 0 50% 48%;
+    --destructive: 0 55% 50%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 210 8% 68%;
-    /* Dark volcanic input - #242C30 */
-    --input: 200 12% 16%;
-    --ring: 38 12% 45%;
+    --border: 30 10% 62%;
+    /* Volcanic black input */
+    --input: 200 14% 13%;
+    --input-foreground: 30 10% 88%;
+    --ring: 32 35% 40%;
 
     --radius: 0.625rem;
 
-    --sidebar-background: 210 8% 78%;
-    --sidebar-foreground: 200 10% 30%;
-    --sidebar-primary: 38 12% 45%;
-    --sidebar-primary-foreground: 210 7% 95%;
-    --sidebar-accent: 210 7% 72%;
-    --sidebar-accent-foreground: 200 12% 16%;
-    --sidebar-border: 210 8% 68%;
-    --sidebar-ring: 38 12% 45%;
+    --sidebar-background: 30 10% 74%;
+    --sidebar-foreground: 200 12% 22%;
+    --sidebar-primary: 32 35% 40%;
+    --sidebar-primary-foreground: 35 20% 95%;
+    --sidebar-accent: 30 10% 66%;
+    --sidebar-accent-foreground: 200 15% 14%;
+    --sidebar-border: 30 10% 60%;
+    --sidebar-ring: 32 35% 40%;
 
     /* Custom palette colors */
-    --steel: 210 8% 57%;
-    --steel-light: 210 8% 68%;
-    --success: 145 40% 45%;
-    --warning: 38 50% 55%;
+    --steel: 205 15% 50%;
+    --steel-light: 205 18% 62%;
+    --success: 155 45% 40%;
+    --warning: 42 55% 52%;
 
     --font-display: 'JetBrains Mono', monospace;
     --font-body: 'Inter', sans-serif;
