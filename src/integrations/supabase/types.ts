@@ -79,6 +79,7 @@ export type Database = {
           background_opacity: number
           background_url: string | null
           created_at: string
+          full_name: string
           id: string
           rate_full_sheet: number
           rate_half_sheet: number
@@ -92,6 +93,7 @@ export type Database = {
           background_opacity?: number
           background_url?: string | null
           created_at?: string
+          full_name?: string
           id?: string
           rate_full_sheet?: number
           rate_half_sheet?: number
@@ -105,6 +107,7 @@ export type Database = {
           background_opacity?: number
           background_url?: string | null
           created_at?: string
+          full_name?: string
           id?: string
           rate_full_sheet?: number
           rate_half_sheet?: number
