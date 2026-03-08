@@ -14,7 +14,92 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      products: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          price: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          price?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          price?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      work_entries: {
+        Row: {
+          created_at: string
+          date: string
+          full_sheets: number
+          half_sheets: number
+          hour_type: string
+          hours: number
+          id: string
+          item_name: string
+          product_id: string | null
+          product_quantity: number
+          project_name: string
+          total_amount: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          date?: string
+          full_sheets?: number
+          half_sheets?: number
+          hour_type?: string
+          hours?: number
+          id?: string
+          item_name?: string
+          product_id?: string | null
+          product_quantity?: number
+          project_name?: string
+          total_amount?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          full_sheets?: number
+          half_sheets?: number
+          hour_type?: string
+          hours?: number
+          id?: string
+          item_name?: string
+          product_id?: string | null
+          product_quantity?: number
+          project_name?: string
+          total_amount?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "work_entries_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
