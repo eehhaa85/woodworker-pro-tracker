@@ -19,6 +19,7 @@ const Settings = () => {
   const [rateFullSheet, setRateFullSheet] = useState<number | null>(null);
   const [rateHalfSheet, setRateHalfSheet] = useState<number | null>(null);
   const [uploading, setUploading] = useState(false);
+  const [localOpacity, setLocalOpacity] = useState<number | null>(null);
 
   // Use local state if edited, otherwise settings from DB
   const val = (local: number | null, fallback: number) => local ?? fallback;
@@ -213,22 +214,34 @@ const Settings = () => {
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <label className="text-xs text-muted-foreground">Прозрачность затемнения</label>
-                  <span className="text-xs font-display text-foreground">{Math.round(settings.background_opacity * 100)}%</span>
+                  <span className="text-xs font-display text-foreground">{Math.round((localOpacity ?? settings.background_opacity) * 100)}%</span>
                 </div>
                 <input
                   type="range"
                   min={0}
                   max={100}
                   step={5}
-                  value={Math.round(settings.background_opacity * 100)}
-                  onChange={async (e) => {
-                    const opacity = Number(e.target.value) / 100;
-                    if (!settings.id) return;
+                  value={Math.round((localOpacity ?? settings.background_opacity) * 100)}
+                  onChange={(e) => {
+                    setLocalOpacity(Number(e.target.value) / 100);
+                  }}
+                  onMouseUp={async () => {
+                    if (localOpacity == null || !settings.id) return;
                     await supabase
                       .from('user_settings')
-                      .update({ background_opacity: opacity } as any)
+                      .update({ background_opacity: localOpacity } as any)
                       .eq('id', settings.id);
                     queryClient.invalidateQueries({ queryKey: ['user_settings'] });
+                    setLocalOpacity(null);
+                  }}
+                  onTouchEnd={async () => {
+                    if (localOpacity == null || !settings.id) return;
+                    await supabase
+                      .from('user_settings')
+                      .update({ background_opacity: localOpacity } as any)
+                      .eq('id', settings.id);
+                    queryClient.invalidateQueries({ queryKey: ['user_settings'] });
+                    setLocalOpacity(null);
                   }}
                   className="w-full accent-primary h-2 rounded-full appearance-none bg-muted cursor-pointer"
                 />
