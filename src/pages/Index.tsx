@@ -116,8 +116,8 @@ const Index = () => {
   const productPrice = selectedProduct?.price || 0;
 
   const liveTotal = useMemo(() => {
-    return calculateTotal(hours, hourType, fullSheets, halfSheets, productPrice, productQuantity);
-  }, [hours, hourType, fullSheets, halfSheets, productPrice, productQuantity]);
+    return calculateTotal(hours, hourType, fullSheets, halfSheets, productPrice, productQuantity, settings);
+  }, [hours, hourType, fullSheets, halfSheets, productPrice, productQuantity, settings]);
 
   const todayTotal = useMemo(() => {
     return todayEntries.reduce((sum, e) => sum + Number(e.total_amount), 0);
@@ -137,7 +137,7 @@ const Index = () => {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
-      const total = calculateTotal(hours, hourType, fullSheets, halfSheets, productPrice, productQuantity);
+      const total = calculateTotal(hours, hourType, fullSheets, halfSheets, productPrice, productQuantity, settings);
       const entry = {
         user_id: user!.id,
         date,
