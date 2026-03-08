@@ -34,8 +34,7 @@ const Index = () => {
   const [itemName, setItemName] = useState('');
   const [hours, setHours] = useState(0);
   const [hourType, setHourType] = useState<HourType>('standard');
-  const [fullSheets, setFullSheets] = useState(0);
-  const [halfSheets, setHalfSheets] = useState(0);
+  const [sheets, setSheets] = useState(0);
   const [productId, setProductId] = useState('');
   const [productQuantity, setProductQuantity] = useState(0);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -115,6 +114,9 @@ const Index = () => {
   const selectedProduct = products.find(p => p.id === productId);
   const productPrice = selectedProduct?.price || 0;
 
+  const fullSheets = Math.floor(sheets);
+  const halfSheets = sheets % 1 >= 0.5 ? 1 : 0;
+
   const liveTotal = useMemo(() => {
     return calculateTotal(hours, hourType, fullSheets, halfSheets, productPrice, productQuantity, settings);
   }, [hours, hourType, fullSheets, halfSheets, productPrice, productQuantity, settings]);
@@ -128,8 +130,7 @@ const Index = () => {
     setItemName('');
     setHours(0);
     setHourType('standard');
-    setFullSheets(0);
-    setHalfSheets(0);
+    setSheets(0);
     setProductId('');
     setProductQuantity(0);
     setEditingId(null);
@@ -185,8 +186,7 @@ const Index = () => {
     setItemName(entry.item_name);
     setHours(entry.hours);
     setHourType(entry.hour_type);
-    setFullSheets(entry.full_sheets);
-    setHalfSheets(entry.half_sheets);
+    setSheets(entry.full_sheets + entry.half_sheets * 0.5);
     setProductId(entry.product_id || '');
     setProductQuantity(entry.product_quantity);
     setEditingId(entry.id);
@@ -283,15 +283,9 @@ const Index = () => {
         {/* Nesting */}
         <div className="stat-card space-y-3">
           <p className="label-industrial text-xs">Нестинг</p>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="text-xs text-muted-foreground block mb-1.5">Целые листы</label>
-              <input type="number" min={0} value={fullSheets || ''} onChange={e => setFullSheets(Number(e.target.value))} className="input-industrial w-full" placeholder="0" />
-            </div>
-            <div>
-              <label className="text-xs text-muted-foreground block mb-1.5">Половины</label>
-              <input type="number" min={0} value={halfSheets || ''} onChange={e => setHalfSheets(Number(e.target.value))} className="input-industrial w-full" placeholder="0" />
-            </div>
+          <div>
+            <label className="text-xs text-muted-foreground block mb-1.5">Листы</label>
+            <input type="number" min={0} step={0.5} value={sheets || ''} onChange={e => setSheets(Number(e.target.value))} className="input-industrial w-full" placeholder="0" />
           </div>
         </div>
 
