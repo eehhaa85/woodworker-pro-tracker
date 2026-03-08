@@ -1,0 +1,1 @@
+ALTER TABLE public.user_settings ADD COLUMN background_opacity numeric NOT NULL DEFAULT 0.85;
