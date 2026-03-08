@@ -1,5 +1,6 @@
 import { useState, useMemo } from 'react';
 import { useAuth } from '@/hooks/useAuth';
+import { useSettings } from '@/hooks/useSettings';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
@@ -25,6 +26,7 @@ function calcHoursBetween(start: string, end: string): number {
 
 const Index = () => {
   const { user } = useAuth();
+  const { settings } = useSettings();
   const queryClient = useQueryClient();
 
   const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'));
@@ -114,8 +116,8 @@ const Index = () => {
   const productPrice = selectedProduct?.price || 0;
 
   const liveTotal = useMemo(() => {
-    return calculateTotal(hours, hourType, fullSheets, halfSheets, productPrice, productQuantity);
-  }, [hours, hourType, fullSheets, halfSheets, productPrice, productQuantity]);
+    return calculateTotal(hours, hourType, fullSheets, halfSheets, productPrice, productQuantity, settings);
+  }, [hours, hourType, fullSheets, halfSheets, productPrice, productQuantity, settings]);
 
   const todayTotal = useMemo(() => {
     return todayEntries.reduce((sum, e) => sum + Number(e.total_amount), 0);
@@ -135,7 +137,7 @@ const Index = () => {
 
   const saveMutation = useMutation({
     mutationFn: async () => {
-      const total = calculateTotal(hours, hourType, fullSheets, halfSheets, productPrice, productQuantity);
+      const total = calculateTotal(hours, hourType, fullSheets, halfSheets, productPrice, productQuantity, settings);
       const entry = {
         user_id: user!.id,
         date,

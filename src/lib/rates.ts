@@ -1,4 +1,4 @@
-// Hourly rates (RUB)
+// Hourly rates (RUB) — defaults, can be overridden by user settings
 export const HOURLY_RATES = {
   standard: 400,
   overtime: 600,
@@ -17,16 +17,32 @@ export const HOUR_TYPE_LABELS: Record<string, string> = {
   sick_leave: 'Больничный/Отпуск',
 };
 
+export interface CustomRates {
+  rate_standard: number;
+  rate_overtime: number;
+  rate_sick_leave: number;
+  rate_full_sheet: number;
+  rate_half_sheet: number;
+}
+
 export function calculateTotal(
   hours: number,
   hourType: keyof typeof HOURLY_RATES,
   fullSheets: number,
   halfSheets: number,
   productPrice: number,
-  productQuantity: number
+  productQuantity: number,
+  customRates?: CustomRates
 ): number {
-  const hourlyTotal = hours * HOURLY_RATES[hourType];
-  const nestingTotal = fullSheets * NESTING_RATES.full_sheet + halfSheets * NESTING_RATES.half_sheet;
+  const hourlyRate = customRates
+    ? { standard: customRates.rate_standard, overtime: customRates.rate_overtime, sick_leave: customRates.rate_sick_leave }[hourType]
+    : HOURLY_RATES[hourType];
+
+  const fullSheetRate = customRates?.rate_full_sheet ?? NESTING_RATES.full_sheet;
+  const halfSheetRate = customRates?.rate_half_sheet ?? NESTING_RATES.half_sheet;
+
+  const hourlyTotal = hours * hourlyRate;
+  const nestingTotal = fullSheets * fullSheetRate + halfSheets * halfSheetRate;
   const productTotal = productPrice * productQuantity;
   return hourlyTotal + nestingTotal + productTotal;
 }

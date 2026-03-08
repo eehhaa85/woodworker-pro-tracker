@@ -74,6 +74,45 @@ export type Database = {
         }
         Relationships: []
       }
+      user_settings: {
+        Row: {
+          background_url: string | null
+          created_at: string
+          id: string
+          rate_full_sheet: number
+          rate_half_sheet: number
+          rate_overtime: number
+          rate_sick_leave: number
+          rate_standard: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          background_url?: string | null
+          created_at?: string
+          id?: string
+          rate_full_sheet?: number
+          rate_half_sheet?: number
+          rate_overtime?: number
+          rate_sick_leave?: number
+          rate_standard?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          background_url?: string | null
+          created_at?: string
+          id?: string
+          rate_full_sheet?: number
+          rate_half_sheet?: number
+          rate_overtime?: number
+          rate_sick_leave?: number
+          rate_standard?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       work_entries: {
         Row: {
           created_at: string
