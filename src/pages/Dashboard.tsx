@@ -75,20 +75,22 @@ const Dashboard = () => {
 
     for (const e of entries) {
       if (e.date < monthStart) continue;
-      const key = (e.project_name || '').trim().toLowerCase();
+      const isSerial = e.product_quantity > 0 && (e as any).products;
+      const rawName = isSerial ? 'TR' : (e.project_name || '').trim();
+      const key = rawName.toLowerCase();
       if (!key) continue;
 
-      const existing = map.get(key);
       const h = Number(e.hours);
       const sheets = Number(e.full_sheets) + Number(e.half_sheets) * 0.5;
       const amount = Number(e.total_amount);
 
+      const existing = map.get(key);
       if (existing) {
         existing.hours += h;
         existing.sheets += sheets;
         existing.earned += amount;
       } else {
-        map.set(key, { displayName: e.project_name.trim(), hours: h, sheets, earned: amount });
+        map.set(key, { displayName: rawName, hours: h, sheets, earned: amount });
       }
     }
 
