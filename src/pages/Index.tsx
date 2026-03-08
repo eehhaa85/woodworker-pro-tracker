@@ -26,6 +26,7 @@ function calcHoursBetween(start: string, end: string): number {
 
 const Index = () => {
   const { user } = useAuth();
+  const { settings } = useSettings();
   const queryClient = useQueryClient();
 
   const [date, setDate] = useState(format(new Date(), 'yyyy-MM-dd'));
