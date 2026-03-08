@@ -5,6 +5,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 export interface UserSettings {
   id?: string;
+  full_name: string;
   rate_standard: number;
   rate_overtime: number;
   rate_sick_leave: number;
@@ -15,6 +16,7 @@ export interface UserSettings {
 }
 
 const DEFAULT_SETTINGS: UserSettings = {
+  full_name: '',
   rate_standard: 400,
   rate_overtime: 600,
   rate_sick_leave: 200,
@@ -58,13 +60,14 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
   const settings: UserSettings = data
     ? {
         id: data.id,
+        full_name: data.full_name ?? '',
         rate_standard: Number(data.rate_standard),
         rate_overtime: Number(data.rate_overtime),
         rate_sick_leave: Number(data.rate_sick_leave),
         rate_full_sheet: Number(data.rate_full_sheet),
         rate_half_sheet: Number(data.rate_half_sheet),
         background_url: data.background_url,
-        background_opacity: Number((data as any).background_opacity ?? 0.85),
+        background_opacity: Number(data.background_opacity ?? 0.85),
       }
     : DEFAULT_SETTINGS;
 

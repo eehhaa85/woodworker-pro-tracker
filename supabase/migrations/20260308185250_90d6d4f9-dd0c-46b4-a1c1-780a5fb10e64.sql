@@ -1,0 +1,1 @@
+ALTER TABLE public.user_settings ADD COLUMN full_name text NOT NULL DEFAULT '';
