@@ -16,7 +16,12 @@ function calcHoursBetween(start: string, end: string): number {
   const [sh, sm] = start.split(':').map(Number);
   const [eh, em] = end.split(':').map(Number);
   const diff = (eh * 60 + em) - (sh * 60 + sm);
-  return diff > 0 ? Math.round(diff / 30) * 0.5 : 0;
+  if (diff <= 0) return 0;
+  const startMinutes = sh * 60 + sm;
+  // Вычитаем 1 час на обед, если начало до 11:00
+  const lunchDeduction = startMinutes < 11 * 60 ? 60 : 0;
+  const net = diff - lunchDeduction;
+  return net > 0 ? Math.round(net / 30) * 0.5 : 0;
 }
 
 const Index = () => {
