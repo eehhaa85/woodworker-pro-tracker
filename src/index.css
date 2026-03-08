@@ -6,49 +6,57 @@
 
 @layer base {
   :root {
-    --background: 95 18% 18%;
-    --foreground: 60 6% 88%;
+    /* Light stone background - #CDD1D5 */
+    --background: 210 7% 82%;
+    /* Dark slate foreground - #242C30 */
+    --foreground: 200 12% 16%;
 
-    --card: 90 12% 22%;
-    --card-foreground: 60 6% 88%;
+    /* Cards slightly darker than background */
+    --card: 210 8% 76%;
+    --card-foreground: 200 12% 16%;
 
-    --popover: 90 10% 24%;
-    --popover-foreground: 60 6% 88%;
+    --popover: 210 8% 78%;
+    --popover-foreground: 200 12% 16%;
 
-    --primary: 78 55% 50%;
-    --primary-foreground: 160 15% 6%;
+    /* Warm taupe primary - #7E7565 */
+    --primary: 38 12% 45%;
+    --primary-foreground: 210 7% 95%;
 
-    --secondary: 90 8% 26%;
-    --secondary-foreground: 60 5% 72%;
+    /* Medium slate - #89929B */
+    --secondary: 210 8% 57%;
+    --secondary-foreground: 210 7% 95%;
 
-    --muted: 90 8% 24%;
-    --muted-foreground: 60 4% 55%;
+    --muted: 210 6% 72%;
+    --muted-foreground: 200 10% 35%;
 
-    --accent: 192 25% 55%;
-    --accent-foreground: 160 15% 6%;
+    /* Ocean teal accent - inspired by the blue tones */
+    --accent: 195 25% 55%;
+    --accent-foreground: 200 12% 12%;
 
     --destructive: 0 50% 48%;
-    --destructive-foreground: 0 0% 95%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 90 8% 28%;
-    --input: 160 12% 9%;
-    --ring: 78 55% 50%;
+    --border: 210 8% 68%;
+    /* Dark volcanic input - #242C30 */
+    --input: 200 12% 16%;
+    --ring: 38 12% 45%;
 
     --radius: 0.625rem;
 
-    --sidebar-background: 95 14% 16%;
-    --sidebar-foreground: 60 5% 68%;
-    --sidebar-primary: 78 55% 50%;
-    --sidebar-primary-foreground: 160 15% 6%;
-    --sidebar-accent: 90 8% 22%;
-    --sidebar-accent-foreground: 60 6% 85%;
-    --sidebar-border: 90 8% 26%;
-    --sidebar-ring: 78 55% 50%;
+    --sidebar-background: 210 8% 78%;
+    --sidebar-foreground: 200 10% 30%;
+    --sidebar-primary: 38 12% 45%;
+    --sidebar-primary-foreground: 210 7% 95%;
+    --sidebar-accent: 210 7% 72%;
+    --sidebar-accent-foreground: 200 12% 16%;
+    --sidebar-border: 210 8% 68%;
+    --sidebar-ring: 38 12% 45%;
 
-    --steel: 192 15% 45%;
-    --steel-light: 192 20% 60%;
-    --success: 78 45% 50%;
-    --warning: 42 50% 58%;
+    /* Custom palette colors */
+    --steel: 210 8% 57%;
+    --steel-light: 210 8% 68%;
+    --success: 145 40% 45%;
+    --warning: 38 50% 55%;
 
     --font-display: 'JetBrains Mono', monospace;
     --font-body: 'Inter', sans-serif;
