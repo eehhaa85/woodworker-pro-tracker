@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from 'react';
+import { useState, useMemo } from 'react';
 import { useAuth } from '@/hooks/useAuth';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -6,10 +6,18 @@ import { Button } from '@/components/ui/button';
 import { calculateTotal, formatRub, HOUR_TYPE_LABELS } from '@/lib/rates';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
-import { Trash2, Pencil } from 'lucide-react';
+import { Trash2, Pencil, Clock } from 'lucide-react';
 import type { Tables } from '@/integrations/supabase/types';
 
 type HourType = 'standard' | 'overtime' | 'sick_leave';
+
+function calcHoursBetween(start: string, end: string): number {
+  if (!start || !end) return 0;
+  const [sh, sm] = start.split(':').map(Number);
+  const [eh, em] = end.split(':').map(Number);
+  const diff = (eh * 60 + em) - (sh * 60 + sm);
+  return diff > 0 ? Math.round(diff / 30) * 0.5 : 0;
+}
 
 const Index = () => {
   const { user } = useAuth();
@@ -25,6 +33,58 @@ const Index = () => {
   const [productId, setProductId] = useState('');
   const [productQuantity, setProductQuantity] = useState(0);
   const [editingId, setEditingId] = useState<string | null>(null);
+
+  // Workday time
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const workdayHours = useMemo(() => calcHoursBetween(startTime, endTime), [startTime, endTime]);
+
+  // Fetch existing time log for selected date
+  const { data: timeLog } = useQuery({
+    queryKey: ['daily_time_logs', date],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('daily_time_logs')
+        .select('*')
+        .eq('date', date)
+        .maybeSingle();
+      if (error) throw error;
+      if (data) {
+        setStartTime(data.start_time?.slice(0, 5) || '');
+        setEndTime(data.end_time?.slice(0, 5) || '');
+      } else {
+        setStartTime('');
+        setEndTime('');
+      }
+      return data;
+    },
+  });
+
+  const saveTimeMutation = useMutation({
+    mutationFn: async () => {
+      if (!startTime || !endTime) return;
+      const totalH = calcHoursBetween(startTime, endTime);
+      const payload = {
+        user_id: user!.id,
+        date,
+        start_time: startTime,
+        end_time: endTime,
+        total_hours: totalH,
+      };
+      if (timeLog?.id) {
+        const { error } = await supabase.from('daily_time_logs').update(payload).eq('id', timeLog.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from('daily_time_logs').insert(payload);
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['daily_time_logs'] });
+      toast.success('Рабочее время сохранено');
+    },
+    onError: (e: any) => toast.error(e.message),
+  });
 
   // Fetch products for dropdown
   const { data: products = [] } = useQuery({
@@ -140,17 +200,48 @@ const Index = () => {
         <p className="text-xs text-muted-foreground mt-1">Всего за {date}: {formatRub(todayTotal)}</p>
       </div>
 
+      {/* Workday time block */}
+      <div className="stat-card space-y-3">
+        <div className="flex items-center gap-2">
+          <Clock size={14} className="text-muted-foreground" />
+          <p className="label-industrial text-xs">Рабочий день</p>
+        </div>
+        <div className="grid grid-cols-3 gap-3 items-end">
+          <div>
+            <label className="text-xs text-muted-foreground block mb-1">Начало</label>
+            <input type="time" value={startTime} onChange={e => setStartTime(e.target.value)} className="input-industrial w-full" />
+          </div>
+          <div>
+            <label className="text-xs text-muted-foreground block mb-1">Конец</label>
+            <input type="time" value={endTime} onChange={e => setEndTime(e.target.value)} className="input-industrial w-full" />
+          </div>
+          <div className="flex flex-col items-center gap-1">
+            {workdayHours > 0 && <span className="text-sm font-display font-bold text-foreground">{workdayHours} ч</span>}
+            <Button
+              type="button"
+              variant="secondary"
+              size="sm"
+              onClick={() => saveTimeMutation.mutate()}
+              disabled={!startTime || !endTime || saveTimeMutation.isPending}
+              className="w-full"
+            >
+              {timeLog ? 'Обновить' : 'Сохранить'}
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Date */}
+      <div>
+        <label className="label-industrial block mb-1.5">Дата</label>
+        <input type="date" value={date} onChange={e => setDate(e.target.value)} className="input-industrial w-full" />
+      </div>
+
       {/* Form */}
       <form
         onSubmit={(e) => { e.preventDefault(); saveMutation.mutate(); }}
         className="space-y-4"
       >
-        {/* Date */}
-        <div>
-          <label className="label-industrial block mb-1.5">Дата</label>
-          <input type="date" value={date} onChange={e => setDate(e.target.value)} className="input-industrial w-full" />
-        </div>
-
         {/* Project & Item */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>

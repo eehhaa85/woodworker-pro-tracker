@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { formatRub, HOUR_TYPE_LABELS } from '@/lib/rates';
 import { format, startOfMonth } from 'date-fns';
-import { Trash2 } from 'lucide-react';
+import { Trash2, Clock } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 
@@ -18,6 +18,19 @@ const Dashboard = () => {
         .select('*, products(name, price)')
         .order('date', { ascending: false })
         .order('created_at', { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+  });
+
+  // Fetch daily time logs
+  const { data: timeLogs = [] } = useQuery({
+    queryKey: ['daily_time_logs', 'all'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('daily_time_logs')
+        .select('*')
+        .order('date', { ascending: false });
       if (error) throw error;
       return data;
     },
@@ -61,8 +74,17 @@ const Dashboard = () => {
       }
     }
 
-    return { todayEarned, monthEarned, totalEarned, monthHours, totalHours, monthSheets, totalSheets };
-  }, [entries]);
+    // Workday hours from time logs
+    let monthWorkdayHours = 0, totalWorkdayHours = 0, todayWorkdayHours = 0;
+    for (const t of timeLogs) {
+      const h = Number(t.total_hours);
+      totalWorkdayHours += h;
+      if (t.date >= monthStart) monthWorkdayHours += h;
+      if (t.date === today) todayWorkdayHours += h;
+    }
+
+    return { todayEarned, monthEarned, totalEarned, monthHours, totalHours, monthSheets, totalSheets, monthWorkdayHours, totalWorkdayHours, todayWorkdayHours };
+  }, [entries, timeLogs]);
 
   // Per-project stats (current month), case-insensitive grouping
   const projectStats = useMemo(() => {
@@ -102,15 +124,19 @@ const Dashboard = () => {
     { label: 'За всё время', value: formatRub(stats.totalEarned) },
     { label: 'Часов (мес / всего)', value: `${stats.monthHours} / ${stats.totalHours}` },
     { label: 'Листов (мес / всего)', value: `${stats.monthSheets} / ${stats.totalSheets}` },
+    { label: 'Рабочий день (мес / всего)', value: `${stats.monthWorkdayHours} / ${stats.totalWorkdayHours} ч`, icon: true },
   ];
 
   return (
     <div className="max-w-4xl mx-auto p-4 space-y-6">
       {/* Stats grid */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
         {statCards.map((s, i) => (
           <div key={i} className={`stat-card ${i === 0 ? 'col-span-2 md:col-span-1' : ''}`}>
-            <p className="label-industrial text-xs">{s.label}</p>
+            <div className="flex items-center gap-1">
+              {s.icon && <Clock size={12} className="text-muted-foreground" />}
+              <p className="label-industrial text-xs">{s.label}</p>
+            </div>
             <p className={`text-xl font-bold font-display mt-1 ${s.accent ? 'text-primary' : 'text-foreground'}`}>
               {s.value}
             </p>
