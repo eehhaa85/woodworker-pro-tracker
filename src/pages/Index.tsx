@@ -209,11 +209,11 @@ const Index = () => {
         <div className="grid grid-cols-3 gap-3 items-end">
           <div>
             <label className="text-xs text-muted-foreground block mb-1">Начало</label>
-            <input type="time" value={startTime} onChange={e => setStartTime(e.target.value)} className="input-industrial w-full" />
+            <input type="time" step="600" value={startTime} onChange={e => setStartTime(e.target.value)} className="input-industrial w-full" />
           </div>
           <div>
             <label className="text-xs text-muted-foreground block mb-1">Конец</label>
-            <input type="time" value={endTime} onChange={e => setEndTime(e.target.value)} className="input-industrial w-full" />
+            <input type="time" step="600" value={endTime} onChange={e => setEndTime(e.target.value)} className="input-industrial w-full" />
           </div>
           <div className="flex flex-col items-center gap-1">
             {workdayHours > 0 && <span className="text-sm font-display font-bold text-foreground">{workdayHours} ч</span>}
