@@ -159,9 +159,12 @@ const Report = () => {
   const monthLabel = format(new Date(monthStart), 'LLLL yyyy', { locale: ru });
   const monthLabelCapitalized = monthLabel.charAt(0).toUpperCase() + monthLabel.slice(1);
 
-  const handleDownload = () => {
+  const [generating, setGenerating] = useState(false);
+
+  const handleDownload = async () => {
+    setGenerating(true);
     try {
-      generateTimesheetPDF({
+      await generateTimesheetPDF({
         monthLabel: monthLabelCapitalized,
         userName: user?.email?.split('@')[0] || 'Сотрудник',
         dailyData,
@@ -172,6 +175,8 @@ const Report = () => {
       toast.success('PDF сформирован');
     } catch (e: any) {
       toast.error('Ошибка: ' + e.message);
+    } finally {
+      setGenerating(false);
     }
   };
 
