@@ -60,6 +60,7 @@ export async function generateTimesheetPDF(data: ReportData) {
   );
   doc.addFileToVFS('Roboto-Regular.ttf', fontBase64);
   doc.addFont('Roboto-Regular.ttf', 'Roboto', 'normal');
+  doc.addFont('Roboto-Regular.ttf', 'Roboto', 'bold');
   doc.setFont('Roboto', 'normal');
 
   // Header
