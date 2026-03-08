@@ -2,15 +2,13 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { formatRub, HOUR_TYPE_LABELS } from '@/lib/rates';
-import { format, startOfMonth, startOfDay } from 'date-fns';
-import { Trash2, Pencil } from 'lucide-react';
+import { format, startOfMonth } from 'date-fns';
+import { Trash2 } from 'lucide-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
 
 const Dashboard = () => {
   const queryClient = useQueryClient();
-  const navigate = useNavigate();
 
   const { data: entries = [] } = useQuery({
     queryKey: ['work_entries', 'all'],
@@ -66,6 +64,38 @@ const Dashboard = () => {
     return { todayEarned, monthEarned, totalEarned, monthHours, totalHours, monthSheets, totalSheets };
   }, [entries]);
 
+  // Per-project stats (current month), case-insensitive grouping
+  const projectStats = useMemo(() => {
+    const monthStart = format(startOfMonth(new Date()), 'yyyy-MM-dd');
+    const map = new Map<string, { displayName: string; hours: number; sheets: number; earned: number }>();
+
+    for (const e of entries) {
+      if (e.date < monthStart) continue;
+      const key = (e.project_name || '').trim().toLowerCase();
+      if (!key) continue;
+
+      const existing = map.get(key);
+      const h = Number(e.hours);
+      const sheets = Number(e.full_sheets) + Number(e.half_sheets) * 0.5;
+      const amount = Number(e.total_amount);
+
+      if (existing) {
+        existing.hours += h;
+        existing.sheets += sheets;
+        existing.earned += amount;
+      } else {
+        map.set(key, {
+          displayName: e.project_name.trim(),
+          hours: h,
+          sheets,
+          earned: amount,
+        });
+      }
+    }
+
+    return Array.from(map.values()).sort((a, b) => b.earned - a.earned);
+  }, [entries]);
+
   const statCards = [
     { label: 'Сегодня', value: formatRub(stats.todayEarned), accent: true },
     { label: 'За месяц', value: formatRub(stats.monthEarned) },
@@ -87,6 +117,25 @@ const Dashboard = () => {
           </div>
         ))}
       </div>
+
+      {/* Per-project stats (current month) */}
+      {projectStats.length > 0 && (
+        <div>
+          <p className="label-industrial text-xs mb-3">По проектам (текущий месяц)</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            {projectStats.map((p) => (
+              <div key={p.displayName} className="stat-card space-y-1">
+                <p className="text-sm font-medium text-foreground truncate">{p.displayName}</p>
+                <div className="flex items-baseline gap-3 text-xs text-muted-foreground">
+                  <span>{p.hours} ч</span>
+                  <span>{p.sheets} лист.</span>
+                </div>
+                <p className="text-base font-bold font-display text-primary">{formatRub(p.earned)}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* History */}
       <div>

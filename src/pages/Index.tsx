@@ -155,11 +155,11 @@ const Index = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="label-industrial block mb-1.5">Проект</label>
-            <input value={projectName} onChange={e => setProjectName(e.target.value)} className="input-industrial w-full" placeholder="Уланский" />
+            <input value={projectName} onChange={e => setProjectName(e.target.value)} className="input-industrial w-full" />
           </div>
           <div>
             <label className="label-industrial block mb-1.5">Предмет</label>
-            <input value={itemName} onChange={e => setItemName(e.target.value)} className="input-industrial w-full" placeholder="Шкаф в санузел" />
+            <input value={itemName} onChange={e => setItemName(e.target.value)} className="input-industrial w-full" />
           </div>
         </div>
 
