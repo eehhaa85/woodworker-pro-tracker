@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { Trash2, CalendarIcon, X } from 'lucide-react';
-import { formatRub, HOUR_TYPE_LABELS } from '@/lib/rates';
+import { Trash2, CalendarIcon, X, Pencil } from 'lucide-react';
+import { formatRub, getEntryHours } from '@/lib/rates';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
@@ -10,6 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { cn } from '@/lib/utils';
+import { useNavigate } from 'react-router-dom';
 
 interface EntryHistoryProps {
   entries: any[];
@@ -18,6 +19,7 @@ interface EntryHistoryProps {
 const EntryHistory = ({ entries }: EntryHistoryProps) => {
   const [filterDate, setFilterDate] = useState<Date | undefined>(undefined);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
@@ -29,6 +31,10 @@ const EntryHistory = ({ entries }: EntryHistoryProps) => {
       toast.success('Запись удалена');
     },
   });
+
+  const handleEdit = (entry: any) => {
+    navigate('/', { state: { editEntry: entry } });
+  };
 
   const filteredEntries = filterDate
     ? entries.filter((e) => e.date === format(filterDate, 'yyyy-MM-dd'))
@@ -82,28 +88,37 @@ const EntryHistory = ({ entries }: EntryHistoryProps) => {
         </p>
       ) : (
         <div className="space-y-2">
-          {filteredEntries.map((entry: any) => (
-            <div key={entry.id} className="stat-card flex items-center justify-between gap-3">
-              <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground font-display">{entry.date}</span>
-                  <span className="text-sm font-semibold text-foreground truncate">
-                    {entry.project_name}{entry.item_name ? ` — ${entry.item_name}` : ''}
-                  </span>
+          {filteredEntries.map((entry: any) => {
+            const { standard, overtime } = getEntryHours(entry);
+            return (
+              <div key={entry.id} className="stat-card flex items-center justify-between gap-3">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-muted-foreground font-display">{entry.date}</span>
+                    <span className="text-sm font-semibold text-foreground truncate">
+                      {entry.project_name}{entry.item_name ? ` — ${entry.item_name}` : ''}
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    {standard > 0 && `${standard}ч`}
+                    {overtime > 0 && ` ${overtime}св.ур.`}
+                    {entry.full_sheets > 0 && ` · ${entry.full_sheets} лист.`}
+                    {entry.half_sheets > 0 && ` · ${entry.half_sheets}×½`}
+                    {entry.product_quantity > 0 && entry.products && ` · ${entry.products.name} ×${entry.product_quantity}`}
+                  </p>
                 </div>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  {entry.hours > 0 && `${entry.hours}ч ${HOUR_TYPE_LABELS[entry.hour_type] || ''}`}
-                  {entry.full_sheets > 0 && ` · ${entry.full_sheets} лист.`}
-                  {entry.half_sheets > 0 && ` · ${entry.half_sheets}×½`}
-                  {entry.product_quantity > 0 && entry.products && ` · ${entry.products.name} ×${entry.product_quantity}`}
-                </p>
+                <p className="font-display font-bold text-primary whitespace-nowrap text-lg">{formatRub(entry.total_amount)}</p>
+                <div className="flex gap-1 shrink-0">
+                  <button onClick={() => handleEdit(entry)} className="p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-muted/50">
+                    <Pencil size={14} />
+                  </button>
+                  <button onClick={() => deleteMutation.mutate(entry.id)} className="p-2 text-muted-foreground hover:text-destructive transition-colors rounded-lg hover:bg-muted/50">
+                    <Trash2 size={14} />
+                  </button>
+                </div>
               </div>
-              <p className="font-display font-bold text-primary whitespace-nowrap text-lg">{formatRub(entry.total_amount)}</p>
-              <button onClick={() => deleteMutation.mutate(entry.id)} className="p-2 text-muted-foreground hover:text-destructive transition-colors rounded-lg hover:bg-muted/50 shrink-0">
-                <Trash2 size={14} />
-              </button>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>

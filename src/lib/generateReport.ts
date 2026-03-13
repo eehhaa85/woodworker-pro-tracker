@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { formatRub } from '@/lib/rates';
+import { formatRub, formatHoursHHMM } from '@/lib/rates';
 import type { UserSettings } from '@/hooks/useSettings';
 
 interface DailyRow {
@@ -8,9 +8,12 @@ interface DailyRow {
   startTime: string;
   endTime: string;
   hours: number;
+  hoursStd: number;
+  hoursOt: number;
   nesting: number;
   tariffHours: number;
   description: string;
+  dayType: string;
 }
 
 interface ProjectRow {
@@ -45,7 +48,7 @@ async function loadFont(): Promise<ArrayBuffer> {
 
 function fmtNum(n: number): string {
   if (n === 0) return '';
-  return Number.isInteger(n) ? String(n) : String(n);
+  return String(n);
 }
 
 export async function generateTimesheetPDF(data: ReportData) {
@@ -53,7 +56,6 @@ export async function generateTimesheetPDF(data: ReportData) {
 
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
-  // Load and register Cyrillic font
   const fontData = await loadFont();
   const fontBase64 = btoa(
     new Uint8Array(fontData).reduce((data, byte) => data + String.fromCharCode(byte), '')
@@ -66,56 +68,56 @@ export async function generateTimesheetPDF(data: ReportData) {
   // Header
   doc.setFontSize(13);
   doc.text(`Табель — ${monthLabel}`, 14, 14);
-
   doc.setFontSize(9);
   doc.text(`Ф.И.О.: ${userName}`, 14, 20);
 
-  // Daily table
+  // Daily table — compact with Ч and СУ columns
   const dailyBody = dailyData.map((d) => [
     String(d.day),
     d.startTime || '',
     d.endTime || '',
-    fmtNum(d.hours),
+    fmtNum(d.hoursStd),
+    fmtNum(d.hoursOt),
     fmtNum(d.nesting),
-    d.tariffHours ? `${d.tariffHours}:00` : '',
+    formatHoursHHMM(d.tariffHours),
     d.description || '',
   ]);
 
   const fontName = 'Roboto';
-  const tableStyles = { font: fontName, fontSize: 5.5, cellPadding: 0.8, overflow: 'ellipsize' as const };
+  const tableStyles = { font: fontName, fontSize: 5, cellPadding: 0.6, overflow: 'ellipsize' as const };
 
   autoTable(doc, {
     startY: 24,
-    head: [['Дата', 'Начало', 'Конец', 'Часы', 'Нест.', 'Тариф', 'Название проекта и изделия']],
+    head: [['Д', 'Нач', 'Кон', 'Ч', 'СУ', 'Н', 'Тариф', 'Описание']],
     body: dailyBody,
     theme: 'grid',
     styles: tableStyles,
-    headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 5.5, font: fontName },
+    headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 5, font: fontName },
     columnStyles: {
-      0: { cellWidth: 8, halign: 'center' },
-      1: { cellWidth: 12, halign: 'center' },
-      2: { cellWidth: 12, halign: 'center' },
-      3: { cellWidth: 10, halign: 'center' },
-      4: { cellWidth: 10, halign: 'center' },
-      5: { cellWidth: 10, halign: 'center' },
-      6: { cellWidth: 'auto' },
+      0: { cellWidth: 6, halign: 'center' },
+      1: { cellWidth: 10, halign: 'center' },
+      2: { cellWidth: 10, halign: 'center' },
+      3: { cellWidth: 7, halign: 'center' },
+      4: { cellWidth: 7, halign: 'center' },
+      5: { cellWidth: 7, halign: 'center' },
+      6: { cellWidth: 10, halign: 'center' },
+      7: { cellWidth: 'auto' },
     },
     didParseCell: (hookData) => {
       const rowData = hookData.row.raw as string[];
-      if (hookData.section === 'body' && rowData && !rowData[6]) {
+      if (hookData.section === 'body' && rowData && !rowData[7]) {
         hookData.cell.styles.textColor = [190, 190, 190];
-        hookData.cell.styles.minCellHeight = 3.5;
+        hookData.cell.styles.minCellHeight = 3;
       }
     },
   });
 
   let y = (doc as any).lastAutoTable.finalY + 4;
-
   if (y > 235) { doc.addPage(); y = 14; }
 
   // Project summary
   doc.setFontSize(8);
-  doc.text('Отчет по затраченному времени по каждому проекту', 14, y);
+  doc.text('По проектам', 14, y);
   y += 2;
 
   const projBody = projectSummary.map((p) => [
@@ -127,16 +129,16 @@ export async function generateTimesheetPDF(data: ReportData) {
 
   autoTable(doc, {
     startY: y,
-    head: [['Проект', 'Часы', 'Нестинг', 'Сдельн. Серийка']],
+    head: [['Проект', 'Часы', 'Нест.', 'Серийка TR']],
     body: projBody,
     theme: 'grid',
-    styles: { font: fontName, fontSize: 6, cellPadding: 1 },
-    headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 6, font: fontName },
+    styles: { font: fontName, fontSize: 5.5, cellPadding: 0.8 },
+    headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 5.5, font: fontName },
     columnStyles: {
       0: { cellWidth: 45 },
-      1: { cellWidth: 20, halign: 'center' },
-      2: { cellWidth: 20, halign: 'center' },
-      3: { cellWidth: 30, halign: 'right' },
+      1: { cellWidth: 18, halign: 'center' },
+      2: { cellWidth: 18, halign: 'center' },
+      3: { cellWidth: 28, halign: 'right' },
     },
   });
 
@@ -145,31 +147,31 @@ export async function generateTimesheetPDF(data: ReportData) {
 
   // Totals summary
   doc.setFontSize(8);
-  doc.text('Отчет по общему рабочему времени', 14, y);
+  doc.text('Итого', 14, y);
   y += 2;
 
   const totalsBody: string[][] = [
     ['Всего часов', String(totals.totalWorkHours), '', ''],
     [
-      'Всего часов по тарифу',
+      'Часы (норма)',
       String(totals.totalTariffStandard),
       `× ${formatRub(settings.rate_standard)}`,
       formatRub(totals.totalTariffStandard * settings.rate_standard),
     ],
     [
-      'Выходные и по просьбе',
+      'Сверхурочные',
       totals.totalTariffOvertime ? String(totals.totalTariffOvertime) : '',
       totals.totalTariffOvertime ? `× ${formatRub(settings.rate_overtime)}` : '',
       totals.totalTariffOvertime ? formatRub(totals.totalTariffOvertime * settings.rate_overtime) : '',
     ],
     [
-      'Больничные и отпускные',
+      'Больничные/отпуск',
       totals.totalTariffSick ? String(totals.totalTariffSick) : '',
       totals.totalTariffSick ? `× ${formatRub(settings.rate_sick_leave)}` : '',
       totals.totalTariffSick ? formatRub(totals.totalTariffSick * settings.rate_sick_leave) : '',
     ],
     [
-      'Нестинг всего',
+      'Нестинг',
       String(totals.totalNesting),
       `× ${formatRub(settings.rate_full_sheet)}`,
       formatRub(totals.totalNesting * settings.rate_full_sheet),
@@ -177,22 +179,21 @@ export async function generateTimesheetPDF(data: ReportData) {
   ];
 
   if (totals.totalSerial > 0) {
-    totalsBody.push(['Серийка', formatRub(totals.totalSerial), '', '']);
+    totalsBody.push(['Серийка TR', formatRub(totals.totalSerial), '', '']);
   }
 
   autoTable(doc, {
     startY: y,
     body: totalsBody,
     theme: 'grid',
-    styles: { font: fontName, fontSize: 6.5, cellPadding: 1.2 },
+    styles: { font: fontName, fontSize: 6, cellPadding: 1 },
     columnStyles: {
-      0: { cellWidth: 50, fontStyle: 'bold' },
-      1: { cellWidth: 22, halign: 'center' },
-      2: { cellWidth: 28, halign: 'center' },
-      3: { cellWidth: 30, halign: 'right', fontStyle: 'bold' },
+      0: { cellWidth: 45, fontStyle: 'bold' },
+      1: { cellWidth: 20, halign: 'center' },
+      2: { cellWidth: 25, halign: 'center' },
+      3: { cellWidth: 28, halign: 'right', fontStyle: 'bold' },
     },
   });
 
-  // Save
   doc.save(`Табель_${monthLabel.replace(/\s/g, '_')}.pdf`);
 }
