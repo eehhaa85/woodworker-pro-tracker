@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
 import { Save, Upload, X, ImageIcon } from 'lucide-react';
+import BackupRestore from '@/components/settings/BackupRestore';
 
 const Settings = () => {
   const { user } = useAuth();
