@@ -308,6 +308,9 @@ const Settings = () => {
           </Button>
         </div>
       </div>
+
+      {/* Backup */}
+      <BackupRestore />
     </div>
   );
 };
