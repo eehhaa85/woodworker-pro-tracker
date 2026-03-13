@@ -18,6 +18,7 @@ export type Database = {
         Row: {
           created_at: string
           date: string
+          day_type: string
           end_time: string
           id: string
           start_time: string
@@ -28,6 +29,7 @@ export type Database = {
         Insert: {
           created_at?: string
           date?: string
+          day_type?: string
           end_time: string
           id?: string
           start_time: string
@@ -38,6 +40,7 @@ export type Database = {
         Update: {
           created_at?: string
           date?: string
+          day_type?: string
           end_time?: string
           id?: string
           start_time?: string
@@ -127,6 +130,7 @@ export type Database = {
           half_sheets: number
           hour_type: string
           hours: number
+          hours_overtime: number
           id: string
           item_name: string
           product_id: string | null
@@ -143,6 +147,7 @@ export type Database = {
           half_sheets?: number
           hour_type?: string
           hours?: number
+          hours_overtime?: number
           id?: string
           item_name?: string
           product_id?: string | null
@@ -159,6 +164,7 @@ export type Database = {
           half_sheets?: number
           hour_type?: string
           hours?: number
+          hours_overtime?: number
           id?: string
           item_name?: string
           product_id?: string | null

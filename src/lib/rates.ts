@@ -17,6 +17,12 @@ export const HOUR_TYPE_LABELS: Record<string, string> = {
   sick_leave: 'Больничный/Отпуск',
 };
 
+export const DAY_TYPE_LABELS: Record<string, string> = {
+  work: 'Рабочий',
+  sick: 'Больничный',
+  vacation: 'Отпуск',
+};
+
 export interface CustomRates {
   rate_standard: number;
   rate_overtime: number;
@@ -26,25 +32,64 @@ export interface CustomRates {
 }
 
 export function calculateTotal(
-  hours: number,
-  hourType: keyof typeof HOURLY_RATES,
+  hoursStandard: number,
+  hoursOvertime: number,
   fullSheets: number,
   halfSheets: number,
   productPrice: number,
   productQuantity: number,
   customRates?: CustomRates
 ): number {
-  const hourlyRate = customRates
-    ? { standard: customRates.rate_standard, overtime: customRates.rate_overtime, sick_leave: customRates.rate_sick_leave }[hourType]
-    : HOURLY_RATES[hourType];
-
+  const stdRate = customRates?.rate_standard ?? HOURLY_RATES.standard;
+  const otRate = customRates?.rate_overtime ?? HOURLY_RATES.overtime;
   const fullSheetRate = customRates?.rate_full_sheet ?? NESTING_RATES.full_sheet;
   const halfSheetRate = customRates?.rate_half_sheet ?? NESTING_RATES.half_sheet;
 
-  const hourlyTotal = hours * hourlyRate;
-  const nestingTotal = fullSheets * fullSheetRate + halfSheets * halfSheetRate;
-  const productTotal = productPrice * productQuantity;
-  return hourlyTotal + nestingTotal + productTotal;
+  return hoursStandard * stdRate + hoursOvertime * otRate +
+    fullSheets * fullSheetRate + halfSheets * halfSheetRate +
+    productPrice * productQuantity;
+}
+
+/** Convert decimal hours to HH:MM string */
+export function formatHoursHHMM(hours: number): string {
+  if (!hours) return '';
+  const h = Math.floor(hours);
+  const m = Math.round((hours - h) * 60);
+  return `${h}:${String(m).padStart(2, '0')}`;
+}
+
+/** Extract standard/overtime/sick hours from an entry (handles legacy hour_type) */
+export function getEntryHours(entry: any): { standard: number; overtime: number; sick: number } {
+  if (entry.hour_type === 'sick_leave') {
+    return { standard: 0, overtime: 0, sick: Number(entry.hours) };
+  }
+  if (entry.hour_type === 'overtime') {
+    return { standard: 0, overtime: Number(entry.hours), sick: 0 };
+  }
+  return {
+    standard: Number(entry.hours),
+    overtime: Number(entry.hours_overtime || 0),
+    sick: 0,
+  };
+}
+
+/** Abbreviate common furniture terms for compact display */
+export function abbreviate(text: string): string {
+  const map: [RegExp, string][] = [
+    [/шкаф/gi, 'шк.'],
+    [/стеллаж/gi, 'стел.'],
+    [/консоль/gi, 'конс.'],
+    [/комод/gi, 'ком.'],
+    [/кровать/gi, 'кров.'],
+    [/тумба/gi, 'тумб.'],
+    [/полка/gi, 'пол.'],
+    [/столешница/gi, 'стол.'],
+  ];
+  let result = text;
+  for (const [re, short] of map) {
+    result = result.replace(re, short);
+  }
+  return result;
 }
 
 export function formatRub(amount: number): string {

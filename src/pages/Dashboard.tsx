@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { format, startOfMonth } from 'date-fns';
+import { getEntryHours } from '@/lib/rates';
 import HeroStats from '@/components/dashboard/HeroStats';
 import SecondaryStats from '@/components/dashboard/SecondaryStats';
 import ProjectStats from '@/components/dashboard/ProjectStats';
@@ -38,14 +39,14 @@ const Dashboard = () => {
 
   const stats = useMemo(() => {
     const today = format(new Date(), 'yyyy-MM-dd');
-
     let todayEarned = 0, monthEarned = 0, totalEarned = 0;
     let monthHours = 0, totalHours = 0;
     let monthSheets = 0, totalSheets = 0;
 
     for (const e of entries) {
       const amount = Number(e.total_amount);
-      const h = Number(e.hours);
+      const { standard, overtime } = getEntryHours(e);
+      const h = standard + overtime;
       const sheets = Number(e.full_sheets) + Number(e.half_sheets) * 0.5;
 
       totalEarned += amount;
@@ -80,7 +81,8 @@ const Dashboard = () => {
       const key = rawName.toLowerCase();
       if (!key) continue;
 
-      const h = Number(e.hours);
+      const { standard, overtime } = getEntryHours(e);
+      const h = standard + overtime;
       const sheets = Number(e.full_sheets) + Number(e.half_sheets) * 0.5;
       const amount = Number(e.total_amount);
 
