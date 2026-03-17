@@ -299,7 +299,7 @@ const Report = () => {
                 <td className="py-1 px-0.5 font-display">{day.day}</td>
                 <td className="py-1 px-0.5">{day.startTime}</td>
                 <td className="py-1 px-0.5">{day.endTime}</td>
-                <td className="py-1 px-0.5 text-right font-display">{day.hoursStd || ''}</td>
+                <td className="py-1 px-0.5 text-right font-display">{day.hours || ''}</td>
                 <td className="py-1 px-0.5 text-right font-display text-accent">{day.hoursOt || ''}</td>
                 <td className="py-1 px-0.5 text-right font-display">{day.nesting || ''}</td>
                 <td className="py-1 px-0.5 text-right font-display">{formatHoursHHMM(day.tariffHours)}</td>
