@@ -355,7 +355,7 @@ const Report = () => {
           <span className="text-muted-foreground">Всего часов:</span>
           <span className="text-right font-display font-bold">{totals.totalWorkHours}</span>
 
-          <span className="text-muted-foreground">Часов (норма):</span>
+          <span className="text-muted-foreground">Часов (тариф):</span>
           <span className="text-right font-display font-bold">
             {totals.totalTariffStandard} × {formatRub(settings.rate_standard)} = {formatRub(totals.totalTariffStandard * settings.rate_standard)}
           </span>
