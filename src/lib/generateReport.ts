@@ -76,7 +76,7 @@ export async function generateTimesheetPDF(data: ReportData) {
     String(d.day),
     d.startTime || '',
     d.endTime || '',
-    fmtNum(d.hoursStd),
+    fmtNum(d.hours),
     fmtNum(d.hoursOt),
     fmtNum(d.nesting),
     formatHoursHHMM(d.tariffHours),
