@@ -85,7 +85,7 @@ const Index = () => {
         date,
         start_time: startTime || '00:00',
         end_time: endTime || '00:00',
-        total_hours: calcHoursBetween(startTime, endTime),
+        total_hours: calculateWorkdayHours(startTime, endTime),
         day_type: dayType,
       };
       if (timeLog?.id) {

@@ -101,7 +101,7 @@ const Report = () => {
       const dayEntries = entries.filter((e: any) => e.date === dateStr);
       const dayTypeVal = (timeLog as any)?.day_type || 'work';
 
-      const totalHours = timeLog ? Number(timeLog.total_hours) : 0;
+      const totalHours = timeLog ? calculateWorkdayHours((timeLog.start_time as string).slice(0, 5), (timeLog.end_time as string).slice(0, 5)) : 0;
       let totalNesting = 0;
       let totalStd = 0;
       let totalOt = 0;

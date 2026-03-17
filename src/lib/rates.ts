@@ -50,6 +50,23 @@ export function calculateTotal(
     productPrice * productQuantity;
 }
 
+/** Calculate worked hours between two HH:MM values with lunch deduction only when spanning 12:00-13:00 */
+export function calculateWorkdayHours(start: string, end: string): number {
+  if (!start || !end) return 0;
+  const [sh, sm] = start.split(':').map(Number);
+  const [eh, em] = end.split(':').map(Number);
+  const startMinutes = sh * 60 + sm;
+  const endMinutes = eh * 60 + em;
+  const diff = endMinutes - startMinutes;
+
+  if (diff <= 0) return 0;
+
+  const lunchDeduction = startMinutes < 12 * 60 && endMinutes > 13 * 60 ? 60 : 0;
+  const net = diff - lunchDeduction;
+
+  return net > 0 ? Math.round(net / 30) * 0.5 : 0;
+}
+
 /** Convert decimal hours to HH:MM string */
 export function formatHoursHHMM(hours: number): string {
   if (!hours) return '';
