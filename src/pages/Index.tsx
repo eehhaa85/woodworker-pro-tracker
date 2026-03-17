@@ -30,7 +30,7 @@ const Index = () => {
 
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
-  const workdayHours = useMemo(() => calcHoursBetween(startTime, endTime), [startTime, endTime]);
+  const workdayHours = useMemo(() => calculateWorkdayHours(startTime, endTime), [startTime, endTime]);
 
   // Handle edit from Dashboard history
   useEffect(() => {
