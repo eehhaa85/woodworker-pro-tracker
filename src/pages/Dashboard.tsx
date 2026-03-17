@@ -108,6 +108,7 @@ const Dashboard = () => {
         monthHours={stats.monthHours} totalHours={stats.totalHours}
         monthSheets={stats.monthSheets} totalSheets={stats.totalSheets}
         monthWorkdayHours={stats.monthWorkdayHours} totalWorkdayHours={stats.totalWorkdayHours}
+        monthHourlyRate={stats.monthHourlyRate}
       />
       <ProjectStats stats={projectStats} />
       <ProductStats entries={entries as any} monthStart={monthStart} />
