@@ -68,7 +68,9 @@ const Dashboard = () => {
       if (t.date >= monthStart) monthWorkdayHours += h;
     }
 
-    return { todayEarned, monthEarned, totalEarned, monthHours, totalHours, monthSheets, totalSheets, monthWorkdayHours, totalWorkdayHours };
+    const monthHourlyRate = monthWorkdayHours > 0 ? monthEarned / monthWorkdayHours : 0;
+
+    return { todayEarned, monthEarned, totalEarned, monthHours, totalHours, monthSheets, totalSheets, monthWorkdayHours, totalWorkdayHours, monthHourlyRate };
   }, [entries, timeLogs, monthStart]);
 
   const projectStats = useMemo(() => {
