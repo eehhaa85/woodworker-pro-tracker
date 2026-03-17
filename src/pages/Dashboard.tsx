@@ -68,7 +68,9 @@ const Dashboard = () => {
       if (t.date >= monthStart) monthWorkdayHours += h;
     }
 
-    return { todayEarned, monthEarned, totalEarned, monthHours, totalHours, monthSheets, totalSheets, monthWorkdayHours, totalWorkdayHours };
+    const monthHourlyRate = monthWorkdayHours > 0 ? monthEarned / monthWorkdayHours : 0;
+
+    return { todayEarned, monthEarned, totalEarned, monthHours, totalHours, monthSheets, totalSheets, monthWorkdayHours, totalWorkdayHours, monthHourlyRate };
   }, [entries, timeLogs, monthStart]);
 
   const projectStats = useMemo(() => {
@@ -106,6 +108,7 @@ const Dashboard = () => {
         monthHours={stats.monthHours} totalHours={stats.totalHours}
         monthSheets={stats.monthSheets} totalSheets={stats.totalSheets}
         monthWorkdayHours={stats.monthWorkdayHours} totalWorkdayHours={stats.totalWorkdayHours}
+        monthHourlyRate={stats.monthHourlyRate}
       />
       <ProjectStats stats={projectStats} />
       <ProductStats entries={entries as any} monthStart={monthStart} />
