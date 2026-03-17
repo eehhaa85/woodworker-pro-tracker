@@ -4,7 +4,7 @@ import { useSettings } from '@/hooks/useSettings';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { formatRub, formatHoursHHMM, getEntryHours, abbreviate } from '@/lib/rates';
+import { formatRub, formatHoursHHMM, getEntryHours, abbreviate, calculateWorkdayHours } from '@/lib/rates';
 import { format, endOfMonth, getDaysInMonth } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { FileDown, Trash2, RotateCcw } from 'lucide-react';
@@ -101,7 +101,7 @@ const Report = () => {
       const dayEntries = entries.filter((e: any) => e.date === dateStr);
       const dayTypeVal = (timeLog as any)?.day_type || 'work';
 
-      const totalHours = timeLog ? Number(timeLog.total_hours) : 0;
+      const totalHours = timeLog ? calculateWorkdayHours((timeLog.start_time as string).slice(0, 5), (timeLog.end_time as string).slice(0, 5)) : 0;
       let totalNesting = 0;
       let totalStd = 0;
       let totalOt = 0;

@@ -4,27 +4,11 @@ import { useSettings } from '@/hooks/useSettings';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { calculateTotal, formatRub, DAY_TYPE_LABELS } from '@/lib/rates';
+import { calculateTotal, formatRub, DAY_TYPE_LABELS, calculateWorkdayHours } from '@/lib/rates';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { Trash2, Pencil, Clock } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
-
-function calcHoursBetween(start: string, end: string): number {
-  if (!start || !end) return 0;
-  const [sh, sm] = start.split(':').map(Number);
-  const [eh, em] = end.split(':').map(Number);
-  const startMinutes = sh * 60 + sm;
-  const endMinutes = eh * 60 + em;
-  const diff = endMinutes - startMinutes;
-
-  if (diff <= 0) return 0;
-
-  const lunchDeduction = startMinutes < 12 * 60 && endMinutes > 13 * 60 ? 60 : 0;
-  const net = diff - lunchDeduction;
-
-  return net > 0 ? Math.round(net / 30) * 0.5 : 0;
-}
 
 const Index = () => {
   const { user } = useAuth();
@@ -46,7 +30,7 @@ const Index = () => {
 
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
-  const workdayHours = useMemo(() => calcHoursBetween(startTime, endTime), [startTime, endTime]);
+  const workdayHours = useMemo(() => calculateWorkdayHours(startTime, endTime), [startTime, endTime]);
 
   // Handle edit from Dashboard history
   useEffect(() => {
@@ -101,7 +85,7 @@ const Index = () => {
         date,
         start_time: startTime || '00:00',
         end_time: endTime || '00:00',
-        total_hours: calcHoursBetween(startTime, endTime),
+        total_hours: calculateWorkdayHours(startTime, endTime),
         day_type: dayType,
       };
       if (timeLog?.id) {
