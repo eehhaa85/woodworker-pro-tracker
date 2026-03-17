@@ -14,11 +14,15 @@ function calcHoursBetween(start: string, end: string): number {
   if (!start || !end) return 0;
   const [sh, sm] = start.split(':').map(Number);
   const [eh, em] = end.split(':').map(Number);
-  const diff = (eh * 60 + em) - (sh * 60 + sm);
-  if (diff <= 0) return 0;
   const startMinutes = sh * 60 + sm;
-  const lunchDeduction = startMinutes < 11 * 60 ? 60 : 0;
+  const endMinutes = eh * 60 + em;
+  const diff = endMinutes - startMinutes;
+
+  if (diff <= 0) return 0;
+
+  const lunchDeduction = startMinutes < 12 * 60 && endMinutes > 13 * 60 ? 60 : 0;
   const net = diff - lunchDeduction;
+
   return net > 0 ? Math.round(net / 30) * 0.5 : 0;
 }
 
