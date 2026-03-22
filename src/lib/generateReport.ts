@@ -84,7 +84,7 @@ export async function generateTimesheetPDF(data: ReportData) {
   ]);
 
   const fontName = 'Roboto';
-  const tableStyles = { font: fontName, fontSize: 5, cellPadding: 0.6, overflow: 'ellipsize' as const };
+  const tableStyles = { font: fontName, fontSize: 5, cellPadding: 0.6, overflow: 'linebreak' as const };
 
   autoTable(doc, {
     startY: 24,
@@ -153,7 +153,7 @@ export async function generateTimesheetPDF(data: ReportData) {
   const totalsBody: string[][] = [
     ['Всего часов', String(totals.totalWorkHours), '', ''],
     [
-      'Часы (норма)',
+      'Часы (тариф)',
       String(totals.totalTariffStandard),
       `× ${formatRub(settings.rate_standard)}`,
       formatRub(totals.totalTariffStandard * settings.rate_standard),
