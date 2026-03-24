@@ -182,17 +182,16 @@ export async function generateTimesheetPDF(data: ReportData) {
     totalsBody.push(['Серийка TR', formatRub(totals.totalSerial), '', '']);
   }
 
-  totalsBody.push(['Аванс', '', '', `−${formatRub(settings.advance_payment)}`]);
+  // Show advance only after 15th of current month, or always for past months
+  const now = new Date();
+  const [reportYear, reportMonth] = data.monthLabel.split(' ');
+  const isCurrentMonth = now.toLocaleDateString('ru-RU', { month: 'long' }).toLowerCase() === reportYear?.toLowerCase()
+    || data.monthLabel.toLowerCase().includes(now.toLocaleDateString('ru-RU', { month: 'long' }).toLowerCase());
+  const showAdvance = !isCurrentMonth || now.getDate() >= 15;
 
-  const grandTotal =
-    totals.totalTariffStandard * settings.rate_standard +
-    totals.totalTariffOvertime * settings.rate_overtime +
-    totals.totalTariffSick * settings.rate_sick_leave +
-    totals.totalNesting * settings.rate_full_sheet +
-    totals.totalSerial -
-    settings.advance_payment;
-
-  totalsBody.push(['ИТОГО ЗП', '', '', formatRub(grandTotal)]);
+  if (showAdvance) {
+    totalsBody.push(['Аванс', formatRub(settings.advance_payment), '', '']);
+  }
 
   autoTable(doc, {
     startY: y,
