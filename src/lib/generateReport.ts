@@ -34,6 +34,7 @@ interface Totals {
 
 interface ReportData {
   monthLabel: string;
+  monthStart: string;
   userName: string;
   dailyData: DailyRow[];
   projectSummary: ProjectRow[];
@@ -182,11 +183,9 @@ export async function generateTimesheetPDF(data: ReportData) {
     totalsBody.push(['Серийка TR', formatRub(totals.totalSerial), '', '']);
   }
 
-  // Show advance only after 15th of current month, or always for past months
   const now = new Date();
-  const [reportYear, reportMonth] = data.monthLabel.split(' ');
-  const isCurrentMonth = now.toLocaleDateString('ru-RU', { month: 'long' }).toLowerCase() === reportYear?.toLowerCase()
-    || data.monthLabel.toLowerCase().includes(now.toLocaleDateString('ru-RU', { month: 'long' }).toLowerCase());
+  const selectedDate = new Date(data.monthStart);
+  const isCurrentMonth = now.getFullYear() === selectedDate.getFullYear() && now.getMonth() === selectedDate.getMonth();
   const showAdvance = !isCurrentMonth || now.getDate() >= 15;
 
   if (showAdvance) {
