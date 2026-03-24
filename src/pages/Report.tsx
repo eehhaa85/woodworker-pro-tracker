@@ -390,6 +390,9 @@ const Report = () => {
             </>
           )}
 
+          <span className="text-muted-foreground">Аванс:</span>
+          <span className="text-right font-display font-bold text-red-400">−{formatRub(settings.advance_payment)}</span>
+
           <span className="text-foreground font-bold border-t border-border pt-2 mt-2">ИТОГО ЗП:</span>
           <span className="text-right font-display font-bold text-primary text-lg border-t border-border pt-2 mt-2">
             {formatRub(
@@ -397,7 +400,8 @@ const Report = () => {
               totals.totalTariffOvertime * settings.rate_overtime +
               totals.totalTariffSick * settings.rate_sick_leave +
               totals.totalNesting * settings.rate_full_sheet +
-              totals.totalSerial
+              totals.totalSerial -
+              settings.advance_payment
             )}
           </span>
         </div>
