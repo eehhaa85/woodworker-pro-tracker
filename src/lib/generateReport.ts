@@ -34,6 +34,7 @@ interface Totals {
 
 interface ReportData {
   monthLabel: string;
+  monthStart: string;
   userName: string;
   dailyData: DailyRow[];
   projectSummary: ProjectRow[];
@@ -182,17 +183,14 @@ export async function generateTimesheetPDF(data: ReportData) {
     totalsBody.push(['Серийка TR', formatRub(totals.totalSerial), '', '']);
   }
 
-  totalsBody.push(['Аванс', '', '', `−${formatRub(settings.advance_payment)}`]);
+  const now = new Date();
+  const selectedDate = new Date(data.monthStart);
+  const isCurrentMonth = now.getFullYear() === selectedDate.getFullYear() && now.getMonth() === selectedDate.getMonth();
+  const showAdvance = !isCurrentMonth || now.getDate() >= 15;
 
-  const grandTotal =
-    totals.totalTariffStandard * settings.rate_standard +
-    totals.totalTariffOvertime * settings.rate_overtime +
-    totals.totalTariffSick * settings.rate_sick_leave +
-    totals.totalNesting * settings.rate_full_sheet +
-    totals.totalSerial -
-    settings.advance_payment;
-
-  totalsBody.push(['ИТОГО ЗП', '', '', formatRub(grandTotal)]);
+  if (showAdvance) {
+    totalsBody.push(['Аванс', formatRub(settings.advance_payment), '', '']);
+  }
 
   autoTable(doc, {
     startY: y,

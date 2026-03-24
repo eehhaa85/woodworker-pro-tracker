@@ -217,6 +217,7 @@ const Report = () => {
     try {
       await generateTimesheetPDF({
         monthLabel: monthLabelCapitalized,
+        monthStart,
         userName: settings.full_name || user?.email?.split('@')[0] || 'Сотрудник',
         dailyData: dailyData.map(d => ({
           day: d.day, startTime: d.startTime, endTime: d.endTime,
@@ -390,8 +391,18 @@ const Report = () => {
             </>
           )}
 
-          <span className="text-muted-foreground">Аванс:</span>
-          <span className="text-right font-display font-bold text-destructive">−{formatRub(settings.advance_payment)}</span>
+          {(() => {
+            const selectedDate = new Date(monthStart);
+            const now = new Date();
+            const isCurrentMonth = now.getFullYear() === selectedDate.getFullYear() && now.getMonth() === selectedDate.getMonth();
+            const showAdvance = !isCurrentMonth || now.getDate() >= 15;
+            return showAdvance ? (
+              <>
+                <span className="text-muted-foreground">Аванс:</span>
+                <span className="text-right font-display font-bold">{formatRub(settings.advance_payment)}</span>
+              </>
+            ) : null;
+          })()}
 
           <span className="text-foreground font-bold border-t border-border pt-2 mt-2">ИТОГО ЗП:</span>
           <span className="text-right font-display font-bold text-primary text-lg border-t border-border pt-2 mt-2">
@@ -400,8 +411,7 @@ const Report = () => {
               totals.totalTariffOvertime * settings.rate_overtime +
               totals.totalTariffSick * settings.rate_sick_leave +
               totals.totalNesting * settings.rate_full_sheet +
-              totals.totalSerial -
-              settings.advance_payment
+              totals.totalSerial
             )}
           </span>
         </div>
