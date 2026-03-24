@@ -182,6 +182,18 @@ export async function generateTimesheetPDF(data: ReportData) {
     totalsBody.push(['Серийка TR', formatRub(totals.totalSerial), '', '']);
   }
 
+  totalsBody.push(['Аванс', '', '', `−${formatRub(settings.advance_payment)}`]);
+
+  const grandTotal =
+    totals.totalTariffStandard * settings.rate_standard +
+    totals.totalTariffOvertime * settings.rate_overtime +
+    totals.totalTariffSick * settings.rate_sick_leave +
+    totals.totalNesting * settings.rate_full_sheet +
+    totals.totalSerial -
+    settings.advance_payment;
+
+  totalsBody.push(['ИТОГО ЗП', '', '', formatRub(grandTotal)]);
+
   autoTable(doc, {
     startY: y,
     body: totalsBody,

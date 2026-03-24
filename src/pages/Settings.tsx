@@ -20,6 +20,7 @@ const Settings = () => {
   const [rateSickLeave, setRateSickLeave] = useState<number | null>(null);
   const [rateFullSheet, setRateFullSheet] = useState<number | null>(null);
   const [rateHalfSheet, setRateHalfSheet] = useState<number | null>(null);
+  const [advancePayment, setAdvancePayment] = useState<number | null>(null);
   const [uploading, setUploading] = useState(false);
   const [localOpacity, setLocalOpacity] = useState<number | null>(null);
 
@@ -36,6 +37,7 @@ const Settings = () => {
         rate_sick_leave: val(rateSickLeave, settings.rate_sick_leave),
         rate_full_sheet: val(rateFullSheet, settings.rate_full_sheet),
         rate_half_sheet: val(rateHalfSheet, settings.rate_half_sheet),
+        advance_payment: val(advancePayment, settings.advance_payment),
         background_url: settings.background_url,
       };
 
@@ -61,6 +63,7 @@ const Settings = () => {
       setRateSickLeave(null);
       setRateFullSheet(null);
       setRateHalfSheet(null);
+      setAdvancePayment(null);
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -198,6 +201,21 @@ const Settings = () => {
                   />
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Advance payment */}
+          <div className="stat-card space-y-3">
+            <p className="label-industrial text-xs">Аванс</p>
+            <div>
+              <label className="text-xs text-muted-foreground block mb-1.5">Сумма аванса (₽)</label>
+              <input
+                type="number"
+                min={0}
+                value={val(advancePayment, settings.advance_payment) || ''}
+                onChange={e => setAdvancePayment(Number(e.target.value))}
+                className="input-industrial w-full"
+              />
             </div>
           </div>
 
