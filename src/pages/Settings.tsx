@@ -141,7 +141,6 @@ const Settings = () => {
     { label: 'Больничный (₽/ч)', value: val(rateSickLeave, settings.rate_sick_leave), set: setRateSickLeave },
     { label: 'Целый лист (₽)', value: val(rateFullSheet, settings.rate_full_sheet), set: setRateFullSheet },
     { label: 'Половина листа (₽)', value: val(rateHalfSheet, settings.rate_half_sheet), set: setRateHalfSheet },
-    { label: 'Аванс (₽)', value: val(advancePayment, settings.advance_payment), set: setAdvancePayment },
   ];
 
   return (
@@ -202,6 +201,21 @@ const Settings = () => {
                   />
                 </div>
               ))}
+            </div>
+          </div>
+
+          {/* Advance payment */}
+          <div className="stat-card space-y-3">
+            <p className="label-industrial text-xs">Аванс</p>
+            <div>
+              <label className="text-xs text-muted-foreground block mb-1.5">Сумма аванса (₽)</label>
+              <input
+                type="number"
+                min={0}
+                value={val(advancePayment, settings.advance_payment) || ''}
+                onChange={e => setAdvancePayment(Number(e.target.value))}
+                className="input-industrial w-full"
+              />
             </div>
           </div>
 
