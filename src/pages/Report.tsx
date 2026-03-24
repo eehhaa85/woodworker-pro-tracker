@@ -390,12 +390,6 @@ const Report = () => {
             </>
           )}
 
-          {new Date(monthStart).getDate() <= 1 && new Date().getMonth() === new Date(monthStart).getMonth() && new Date().getDate() >= 15 && (
-            <>
-              <span className="text-muted-foreground">Аванс:</span>
-              <span className="text-right font-display font-bold">{formatRub(settings.advance_payment)}</span>
-            </>
-          )}
           {(() => {
             const selectedDate = new Date(monthStart);
             const now = new Date();
