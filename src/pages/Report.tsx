@@ -114,7 +114,7 @@ const Report = () => {
         const { standard, overtime } = getEntryHours(e);
         totalStd += standard;
         totalOt += overtime;
-        totalTariff += standard + overtime;
+        totalTariff += standard;
 
         const sheets = Number(e.full_sheets) + Number(e.half_sheets) * 0.5;
         totalNesting += sheets;

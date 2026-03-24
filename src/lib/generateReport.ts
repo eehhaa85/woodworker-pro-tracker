@@ -84,7 +84,7 @@ export async function generateTimesheetPDF(data: ReportData) {
   ]);
 
   const fontName = 'Roboto';
-  const tableStyles = { font: fontName, fontSize: 5, cellPadding: 0.6, overflow: 'linebreak' as const };
+  const tableStyles = { font: fontName, fontSize: 6.5, cellPadding: 0.8, overflow: 'linebreak' as const };
 
   autoTable(doc, {
     startY: 24,
@@ -92,7 +92,7 @@ export async function generateTimesheetPDF(data: ReportData) {
     body: dailyBody,
     theme: 'grid',
     styles: tableStyles,
-    headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 5, font: fontName },
+    headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 6.5, font: fontName },
     columnStyles: {
       0: { cellWidth: 6, halign: 'center' },
       1: { cellWidth: 10, halign: 'center' },
@@ -132,8 +132,8 @@ export async function generateTimesheetPDF(data: ReportData) {
     head: [['Проект', 'Часы', 'Нест.', 'Серийка TR']],
     body: projBody,
     theme: 'grid',
-    styles: { font: fontName, fontSize: 5.5, cellPadding: 0.8 },
-    headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 5.5, font: fontName },
+    styles: { font: fontName, fontSize: 7, cellPadding: 1 },
+    headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 7, font: fontName },
     columnStyles: {
       0: { cellWidth: 45 },
       1: { cellWidth: 18, halign: 'center' },
@@ -186,7 +186,7 @@ export async function generateTimesheetPDF(data: ReportData) {
     startY: y,
     body: totalsBody,
     theme: 'grid',
-    styles: { font: fontName, fontSize: 6, cellPadding: 1 },
+    styles: { font: fontName, fontSize: 7.5, cellPadding: 1.2 },
     columnStyles: {
       0: { cellWidth: 45, fontStyle: 'bold' },
       1: { cellWidth: 20, halign: 'center' },
