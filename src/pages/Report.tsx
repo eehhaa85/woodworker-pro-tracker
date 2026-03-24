@@ -217,6 +217,7 @@ const Report = () => {
     try {
       await generateTimesheetPDF({
         monthLabel: monthLabelCapitalized,
+        monthStart,
         userName: settings.full_name || user?.email?.split('@')[0] || 'Сотрудник',
         dailyData: dailyData.map(d => ({
           day: d.day, startTime: d.startTime, endTime: d.endTime,
