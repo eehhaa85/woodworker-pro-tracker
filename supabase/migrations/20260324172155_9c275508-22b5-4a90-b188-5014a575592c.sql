@@ -1,0 +1,1 @@
+ALTER TABLE public.user_settings ADD COLUMN advance_payment numeric NOT NULL DEFAULT 20000;

@@ -79,6 +79,7 @@ export type Database = {
       }
       user_settings: {
         Row: {
+          advance_payment: number
           background_opacity: number
           background_url: string | null
           created_at: string
@@ -93,6 +94,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          advance_payment?: number
           background_opacity?: number
           background_url?: string | null
           created_at?: string
@@ -107,6 +109,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          advance_payment?: number
           background_opacity?: number
           background_url?: string | null
           created_at?: string
