@@ -391,7 +391,7 @@ const Report = () => {
           )}
 
           <span className="text-muted-foreground">Аванс:</span>
-          <span className="text-right font-display font-bold text-red-400">−{formatRub(settings.advance_payment)}</span>
+          <span className="text-right font-display font-bold text-destructive">−{formatRub(settings.advance_payment)}</span>
 
           <span className="text-foreground font-bold border-t border-border pt-2 mt-2">ИТОГО ЗП:</span>
           <span className="text-right font-display font-bold text-primary text-lg border-t border-border pt-2 mt-2">
