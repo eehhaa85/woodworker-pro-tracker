@@ -13,6 +13,7 @@ export interface UserSettings {
   rate_half_sheet: number;
   background_url: string | null;
   background_opacity: number;
+  advance_payment: number;
 }
 
 const DEFAULT_SETTINGS: UserSettings = {
@@ -24,6 +25,7 @@ const DEFAULT_SETTINGS: UserSettings = {
   rate_half_sheet: 330,
   background_url: null,
   background_opacity: 0.85,
+  advance_payment: 20000,
 };
 
 interface SettingsContextType {
@@ -68,6 +70,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         rate_half_sheet: Number(data.rate_half_sheet),
         background_url: data.background_url,
         background_opacity: Number(data.background_opacity ?? 0.85),
+        advance_payment: Number(data.advance_payment ?? 20000),
       }
     : DEFAULT_SETTINGS;
 

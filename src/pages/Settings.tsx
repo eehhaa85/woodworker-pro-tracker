@@ -20,6 +20,7 @@ const Settings = () => {
   const [rateSickLeave, setRateSickLeave] = useState<number | null>(null);
   const [rateFullSheet, setRateFullSheet] = useState<number | null>(null);
   const [rateHalfSheet, setRateHalfSheet] = useState<number | null>(null);
+  const [advancePayment, setAdvancePayment] = useState<number | null>(null);
   const [uploading, setUploading] = useState(false);
   const [localOpacity, setLocalOpacity] = useState<number | null>(null);
 
@@ -36,6 +37,7 @@ const Settings = () => {
         rate_sick_leave: val(rateSickLeave, settings.rate_sick_leave),
         rate_full_sheet: val(rateFullSheet, settings.rate_full_sheet),
         rate_half_sheet: val(rateHalfSheet, settings.rate_half_sheet),
+        advance_payment: val(advancePayment, settings.advance_payment),
         background_url: settings.background_url,
       };
 
@@ -61,6 +63,7 @@ const Settings = () => {
       setRateSickLeave(null);
       setRateFullSheet(null);
       setRateHalfSheet(null);
+      setAdvancePayment(null);
     },
     onError: (e: any) => toast.error(e.message),
   });
@@ -138,6 +141,7 @@ const Settings = () => {
     { label: 'Больничный (₽/ч)', value: val(rateSickLeave, settings.rate_sick_leave), set: setRateSickLeave },
     { label: 'Целый лист (₽)', value: val(rateFullSheet, settings.rate_full_sheet), set: setRateFullSheet },
     { label: 'Половина листа (₽)', value: val(rateHalfSheet, settings.rate_half_sheet), set: setRateHalfSheet },
+    { label: 'Аванс (₽)', value: val(advancePayment, settings.advance_payment), set: setAdvancePayment },
   ];
 
   return (
