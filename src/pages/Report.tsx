@@ -222,7 +222,7 @@ const Report = () => {
         dailyData: dailyData.map(d => ({
           day: d.day, startTime: d.startTime, endTime: d.endTime,
           hours: d.hours, hoursStd: d.hoursStd, hoursOt: d.hoursOt,
-          nesting: d.nesting, tariffHours: d.tariffHours,
+          nesting: d.nesting, tariffHours: d.tariffHours, dayType: d.dayType,
           description: d.description, dayType: d.dayType,
         })),
         projectSummary,
@@ -303,7 +303,7 @@ const Report = () => {
                 <td className="py-1 px-0.5 text-right font-display">{day.hours || ''}</td>
                 <td className="py-1 px-0.5 text-right font-display text-accent">{day.hoursOt || ''}</td>
                 <td className="py-1 px-0.5 text-right font-display">{day.nesting || ''}</td>
-                <td className="py-1 px-0.5 text-right font-display">{formatHoursHHMM(day.tariffHours)}</td>
+                <td className="py-1 px-0.5 text-right font-display">{day.tariffHours || ''}</td>
                 <td className="py-1 px-1 max-w-[250px] truncate">{day.description}</td>
                 <td className="py-1 px-0.5">
                   {day.hasData && (
