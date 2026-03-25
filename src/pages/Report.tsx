@@ -180,6 +180,20 @@ const Report = () => {
     return Array.from(map.values()).map(({ displayName, ...d }) => ({ name: displayName, ...d }));
   }, [entries]);
 
+  // Serial products summary
+  const serialSummary = useMemo(() => {
+    const map = new Map<string, { name: string; quantity: number }>();
+    for (const e of entries) {
+      if (e.product_quantity > 0 && (e as any).products) {
+        const prodName = (e as any).products.name;
+        const existing = map.get(prodName) || { name: prodName, quantity: 0 };
+        existing.quantity += e.product_quantity;
+        map.set(prodName, existing);
+      }
+    }
+    return Array.from(map.values());
+  }, [entries]);
+
   // Totals
   const totals = useMemo(() => {
     let totalWorkHours = 0, totalTariffStandard = 0, totalTariffOvertime = 0;
@@ -226,6 +240,7 @@ const Report = () => {
           description: d.description, dayType: d.dayType,
         })),
         projectSummary,
+        serialSummary,
         totals,
         settings,
       });
@@ -301,9 +316,9 @@ const Report = () => {
                 <td className="py-1 px-0.5">{day.startTime}</td>
                 <td className="py-1 px-0.5">{day.endTime}</td>
                 <td className="py-1 px-0.5 text-right font-display">{day.hours || ''}</td>
-                <td className="py-1 px-0.5 text-right font-display text-accent">{day.hoursOt || ''}</td>
+                <td className="py-1 px-0.5 text-right font-display text-accent">{day.hoursOt ? (day.hoursOt % 1 === 0 ? day.hoursOt : day.hoursOt.toFixed(1)) : ''}</td>
                 <td className="py-1 px-0.5 text-right font-display">{day.nesting || ''}</td>
-                <td className="py-1 px-0.5 text-right font-display">{formatHoursHHMM(day.tariffHours)}</td>
+                <td className="py-1 px-0.5 text-right font-display">{day.tariffHours ? (day.tariffHours % 1 === 0 ? day.tariffHours : day.tariffHours.toFixed(1)) : ''}</td>
                 <td className="py-1 px-1 max-w-[250px] truncate">{day.description}</td>
                 <td className="py-1 px-0.5">
                   {day.hasData && (

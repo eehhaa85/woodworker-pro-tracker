@@ -1,6 +1,6 @@
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
-import { formatRub, formatHoursHHMM } from '@/lib/rates';
+import { formatRub } from '@/lib/rates';
 import type { UserSettings } from '@/hooks/useSettings';
 
 interface DailyRow {
@@ -23,6 +23,11 @@ interface ProjectRow {
   serial: number;
 }
 
+interface SerialRow {
+  name: string;
+  quantity: number;
+}
+
 interface Totals {
   totalWorkHours: number;
   totalTariffStandard: number;
@@ -38,6 +43,7 @@ interface ReportData {
   userName: string;
   dailyData: DailyRow[];
   projectSummary: ProjectRow[];
+  serialSummary: SerialRow[];
   totals: Totals;
   settings: UserSettings;
 }
@@ -52,8 +58,13 @@ function fmtNum(n: number): string {
   return String(n);
 }
 
+function fmtDec(n: number): string {
+  if (n === 0) return '';
+  return n % 1 === 0 ? String(n) : n.toFixed(1);
+}
+
 export async function generateTimesheetPDF(data: ReportData) {
-  const { monthLabel, userName, dailyData, projectSummary, totals, settings } = data;
+  const { monthLabel, userName, dailyData, projectSummary, serialSummary, totals, settings } = data;
 
   const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
 
@@ -72,15 +83,15 @@ export async function generateTimesheetPDF(data: ReportData) {
   doc.setFontSize(9);
   doc.text(`Ф.И.О.: ${userName}`, 14, 20);
 
-  // Daily table — compact with Ч and СУ columns
+  // Daily table
   const dailyBody = dailyData.map((d) => [
     String(d.day),
     d.startTime || '',
     d.endTime || '',
     fmtNum(d.hours),
-    fmtNum(d.hoursOt),
+    fmtDec(d.hoursOt),
     fmtNum(d.nesting),
-    formatHoursHHMM(d.tariffHours),
+    fmtDec(d.tariffHours),
     d.description || '',
   ]);
 
@@ -116,9 +127,19 @@ export async function generateTimesheetPDF(data: ReportData) {
   let y = (doc as any).lastAutoTable.finalY + 4;
   if (y > 235) { doc.addPage(); y = 14; }
 
-  // Project summary
+  // Project summary + Serial summary side by side
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const margin = 14;
+  const gap = 4;
+  const leftWidth = (pageWidth - margin * 2 - gap) * 0.55;
+  const rightWidth = (pageWidth - margin * 2 - gap) * 0.45;
+
   doc.setFontSize(8);
-  doc.text('По проектам', 14, y);
+  doc.text('По проектам', margin, y);
+
+  if (serialSummary.length > 0) {
+    doc.text('Серийные позиции', margin + leftWidth + gap, y);
+  }
   y += 2;
 
   const projBody = projectSummary.map((p) => [
@@ -130,25 +151,48 @@ export async function generateTimesheetPDF(data: ReportData) {
 
   autoTable(doc, {
     startY: y,
+    margin: { left: margin, right: pageWidth - margin - leftWidth },
     head: [['Проект', 'Часы', 'Нест.', 'Серийка TR']],
     body: projBody,
     theme: 'grid',
     styles: { font: fontName, fontSize: 7, cellPadding: 1 },
     headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 7, font: fontName },
     columnStyles: {
-      0: { cellWidth: 45 },
-      1: { cellWidth: 18, halign: 'center' },
-      2: { cellWidth: 18, halign: 'center' },
-      3: { cellWidth: 28, halign: 'right' },
+      0: { cellWidth: 'auto' },
+      1: { cellWidth: 14, halign: 'center' },
+      2: { cellWidth: 14, halign: 'center' },
+      3: { cellWidth: 22, halign: 'right' },
     },
   });
 
-  y = (doc as any).lastAutoTable.finalY + 4;
+  const projEndY = (doc as any).lastAutoTable.finalY;
+
+  // Serial summary table (right side)
+  if (serialSummary.length > 0) {
+    const serialBody = serialSummary.map((s) => [s.name, String(s.quantity)]);
+
+    autoTable(doc, {
+      startY: y,
+      margin: { left: margin + leftWidth + gap, right: margin },
+      head: [['Позиция', 'Кол-во']],
+      body: serialBody,
+      theme: 'grid',
+      styles: { font: fontName, fontSize: 7, cellPadding: 1 },
+      headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 7, font: fontName },
+      columnStyles: {
+        0: { cellWidth: 'auto' },
+        1: { cellWidth: 16, halign: 'center' },
+      },
+    });
+  }
+
+  const serialEndY = serialSummary.length > 0 ? (doc as any).lastAutoTable.finalY : projEndY;
+  y = Math.max(projEndY, serialEndY) + 4;
   if (y > 245) { doc.addPage(); y = 14; }
 
   // Totals summary
   doc.setFontSize(8);
-  doc.text('Итого', 14, y);
+  doc.text('Итого', margin, y);
   y += 2;
 
   const totalsBody: string[][] = [
