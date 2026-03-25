@@ -180,6 +180,20 @@ const Report = () => {
     return Array.from(map.values()).map(({ displayName, ...d }) => ({ name: displayName, ...d }));
   }, [entries]);
 
+  // Serial products summary
+  const serialSummary = useMemo(() => {
+    const map = new Map<string, { name: string; quantity: number }>();
+    for (const e of entries) {
+      if (e.product_quantity > 0 && (e as any).products) {
+        const prodName = (e as any).products.name;
+        const existing = map.get(prodName) || { name: prodName, quantity: 0 };
+        existing.quantity += e.product_quantity;
+        map.set(prodName, existing);
+      }
+    }
+    return Array.from(map.values());
+  }, [entries]);
+
   // Totals
   const totals = useMemo(() => {
     let totalWorkHours = 0, totalTariffStandard = 0, totalTariffOvertime = 0;
@@ -226,6 +240,7 @@ const Report = () => {
           description: d.description, dayType: d.dayType,
         })),
         projectSummary,
+        serialSummary,
         totals,
         settings,
       });
