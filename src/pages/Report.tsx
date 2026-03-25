@@ -222,7 +222,7 @@ const Report = () => {
         dailyData: dailyData.map(d => ({
           day: d.day, startTime: d.startTime, endTime: d.endTime,
           hours: d.hours, hoursStd: d.hoursStd, hoursOt: d.hoursOt,
-          nesting: d.nesting, tariffHours: d.tariffHours, dayType: d.dayType,
+          nesting: d.nesting, tariffHours: d.tariffHours,
           description: d.description, dayType: d.dayType,
         })),
         projectSummary,
