@@ -316,9 +316,9 @@ const Report = () => {
                 <td className="py-1 px-0.5">{day.startTime}</td>
                 <td className="py-1 px-0.5">{day.endTime}</td>
                 <td className="py-1 px-0.5 text-right font-display">{day.hours || ''}</td>
-                <td className="py-1 px-0.5 text-right font-display text-accent">{day.hoursOt || ''}</td>
+                <td className="py-1 px-0.5 text-right font-display text-accent">{day.hoursOt ? (day.hoursOt % 1 === 0 ? day.hoursOt : day.hoursOt.toFixed(1)) : ''}</td>
                 <td className="py-1 px-0.5 text-right font-display">{day.nesting || ''}</td>
-                <td className="py-1 px-0.5 text-right font-display">{day.tariffHours || ''}</td>
+                <td className="py-1 px-0.5 text-right font-display">{day.tariffHours ? (day.tariffHours % 1 === 0 ? day.tariffHours : day.tariffHours.toFixed(1)) : ''}</td>
                 <td className="py-1 px-1 max-w-[250px] truncate">{day.description}</td>
                 <td className="py-1 px-0.5">
                   {day.hasData && (
