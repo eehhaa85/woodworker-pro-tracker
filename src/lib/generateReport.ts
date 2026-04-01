@@ -240,7 +240,7 @@ export async function generateTimesheetPDF(data: ReportData) {
     startY: y,
     body: totalsBody,
     theme: 'grid',
-    styles: { font: fontName, fontSize: 7.5, cellPadding: 1.2 },
+    styles: { font: fontName, fontSize: 8.5, cellPadding: 1.2 },
     columnStyles: {
       0: { cellWidth: 45, fontStyle: 'bold' },
       1: { cellWidth: 20, halign: 'center' },
