@@ -1,13 +1,14 @@
 import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useSettings } from '@/hooks/useSettings';
-import { LayoutDashboard, PlusCircle, BookOpen, LogOut, Settings, FileText } from 'lucide-react';
+import { LayoutDashboard, PlusCircle, BookOpen, LogOut, Settings, FileText, Archive } from 'lucide-react';
 
 const navItems = [
   { to: '/', icon: PlusCircle, label: 'Запись' },
   { to: '/dashboard', icon: LayoutDashboard, label: 'Статистика' },
   { to: '/catalog', icon: BookOpen, label: 'Справочник' },
   { to: '/report', icon: FileText, label: 'Табель' },
+  { to: '/archive', icon: Archive, label: 'Архив' },
   { to: '/settings', icon: Settings, label: 'Настройки' },
 ];
 

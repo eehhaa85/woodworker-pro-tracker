@@ -78,9 +78,9 @@ export async function generateTimesheetPDF(data: ReportData) {
   doc.setFont('Roboto', 'normal');
 
   // Header
-  doc.setFontSize(13);
+  doc.setFontSize(14);
   doc.text(`Табель — ${monthLabel}`, 14, 14);
-  doc.setFontSize(9);
+  doc.setFontSize(10);
   doc.text(`Ф.И.О.: ${userName}`, 14, 20);
 
   // Daily table
@@ -96,7 +96,7 @@ export async function generateTimesheetPDF(data: ReportData) {
   ]);
 
   const fontName = 'Roboto';
-  const tableStyles = { font: fontName, fontSize: 6.5, cellPadding: 0.8, overflow: 'linebreak' as const };
+  const tableStyles = { font: fontName, fontSize: 7.5, cellPadding: 0.8, overflow: 'linebreak' as const };
 
   autoTable(doc, {
     startY: 24,
@@ -104,7 +104,7 @@ export async function generateTimesheetPDF(data: ReportData) {
     body: dailyBody,
     theme: 'grid',
     styles: tableStyles,
-    headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 6.5, font: fontName },
+    headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 7.5, font: fontName },
     columnStyles: {
       0: { cellWidth: 6, halign: 'center' },
       1: { cellWidth: 10, halign: 'center' },
@@ -134,7 +134,7 @@ export async function generateTimesheetPDF(data: ReportData) {
   const leftWidth = (pageWidth - margin * 2 - gap) * 0.55;
   const rightWidth = (pageWidth - margin * 2 - gap) * 0.45;
 
-  doc.setFontSize(8);
+  doc.setFontSize(9);
   doc.text('По проектам', margin, y);
 
   if (serialSummary.length > 0) {
@@ -155,8 +155,8 @@ export async function generateTimesheetPDF(data: ReportData) {
     head: [['Проект', 'Часы', 'Нест.', 'Серийка TR']],
     body: projBody,
     theme: 'grid',
-    styles: { font: fontName, fontSize: 7, cellPadding: 1 },
-    headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 7, font: fontName },
+    styles: { font: fontName, fontSize: 8, cellPadding: 1 },
+    headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 8, font: fontName },
     columnStyles: {
       0: { cellWidth: 'auto' },
       1: { cellWidth: 14, halign: 'center' },
@@ -177,8 +177,8 @@ export async function generateTimesheetPDF(data: ReportData) {
       head: [['Позиция', 'Кол-во']],
       body: serialBody,
       theme: 'grid',
-      styles: { font: fontName, fontSize: 7, cellPadding: 1 },
-      headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 7, font: fontName },
+      styles: { font: fontName, fontSize: 8, cellPadding: 1 },
+      headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 8, font: fontName },
       columnStyles: {
         0: { cellWidth: 'auto' },
         1: { cellWidth: 16, halign: 'center' },
@@ -191,7 +191,7 @@ export async function generateTimesheetPDF(data: ReportData) {
   if (y > 245) { doc.addPage(); y = 14; }
 
   // Totals summary
-  doc.setFontSize(8);
+  doc.setFontSize(9);
   doc.text('Итого', margin, y);
   y += 2;
 
@@ -240,7 +240,7 @@ export async function generateTimesheetPDF(data: ReportData) {
     startY: y,
     body: totalsBody,
     theme: 'grid',
-    styles: { font: fontName, fontSize: 7.5, cellPadding: 1.2 },
+    styles: { font: fontName, fontSize: 8.5, cellPadding: 1.2 },
     columnStyles: {
       0: { cellWidth: 45, fontStyle: 'bold' },
       1: { cellWidth: 20, halign: 'center' },
