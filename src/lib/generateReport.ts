@@ -96,7 +96,7 @@ export async function generateTimesheetPDF(data: ReportData) {
   ]);
 
   const fontName = 'Roboto';
-  const tableStyles = { font: fontName, fontSize: 7.5, cellPadding: 0.8, overflow: 'linebreak' as const };
+  const tableStyles = { font: fontName, fontSize: 7.2, cellPadding: 0.8, overflow: 'linebreak' as const };
 
   autoTable(doc, {
     startY: 24,
