@@ -10,7 +10,7 @@ import Dashboard from "./pages/Dashboard";
 import Catalog from "./pages/Catalog";
 import Settings from "./pages/Settings";
 import Report from "./pages/Report";
-import Archive from "./pages/Archive";
+
 import Auth from "./pages/Auth";
 import AppLayout from "./components/AppLayout";
 import NotFound from "./pages/NotFound";
