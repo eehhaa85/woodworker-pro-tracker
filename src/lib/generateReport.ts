@@ -191,7 +191,7 @@ export async function generateTimesheetPDF(data: ReportData) {
   if (y > 245) { doc.addPage(); y = 14; }
 
   // Totals summary
-  doc.setFontSize(8);
+  doc.setFontSize(9);
   doc.text('Итого', margin, y);
   y += 2;
 
