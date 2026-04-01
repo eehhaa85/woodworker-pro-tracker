@@ -78,9 +78,9 @@ export async function generateTimesheetPDF(data: ReportData) {
   doc.setFont('Roboto', 'normal');
 
   // Header
-  doc.setFontSize(13);
+  doc.setFontSize(14);
   doc.text(`Табель — ${monthLabel}`, 14, 14);
-  doc.setFontSize(9);
+  doc.setFontSize(10);
   doc.text(`Ф.И.О.: ${userName}`, 14, 20);
 
   // Daily table
