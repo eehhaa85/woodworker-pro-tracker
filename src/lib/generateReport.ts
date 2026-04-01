@@ -159,8 +159,8 @@ export async function generateTimesheetPDF(data: ReportData) {
     head: [['Проект', 'Часы', 'Нест.', 'Серийка TR']],
     body: projBody,
     theme: 'grid',
-    styles: { font: fontName, fontSize: 8, cellPadding: 1 },
-    headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 8, font: fontName },
+    styles: { font: fontName, fontSize: 7.7, cellPadding: 1 },
+    headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 7.7, font: fontName },
     columnStyles: {
       0: { cellWidth: 'auto' },
       1: { cellWidth: 14, halign: 'center' },
