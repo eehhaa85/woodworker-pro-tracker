@@ -104,7 +104,7 @@ export async function generateTimesheetPDF(data: ReportData) {
     body: dailyBody,
     theme: 'grid',
     styles: tableStyles,
-    headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 6.5, font: fontName },
+    headStyles: { fillColor: [50, 50, 50], textColor: 255, fontSize: 7.5, font: fontName },
     columnStyles: {
       0: { cellWidth: 6, halign: 'center' },
       1: { cellWidth: 10, halign: 'center' },
