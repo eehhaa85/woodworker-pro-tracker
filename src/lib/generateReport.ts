@@ -138,7 +138,7 @@ export async function generateTimesheetPDF(data: ReportData) {
   const leftWidth = (pageWidth - margin * 2 - gap) * 0.55;
   const rightWidth = (pageWidth - margin * 2 - gap) * 0.45;
 
-  doc.setFontSize(9);
+  doc.setFontSize(8.7);
   doc.text('По проектам', margin, y);
 
   if (serialSummary.length > 0) {
