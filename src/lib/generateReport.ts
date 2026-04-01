@@ -117,9 +117,13 @@ export async function generateTimesheetPDF(data: ReportData) {
     },
     didParseCell: (hookData) => {
       const rowData = hookData.row.raw as string[];
-      if (hookData.section === 'body' && rowData && !rowData[7]) {
-        hookData.cell.styles.textColor = [190, 190, 190];
-        hookData.cell.styles.minCellHeight = 3;
+      if (hookData.section === 'body' && rowData) {
+        if (!rowData[7]) {
+          hookData.cell.styles.textColor = [190, 190, 190];
+          hookData.cell.styles.minCellHeight = 2;
+        } else {
+          hookData.cell.styles.minCellHeight = 3;
+        }
       }
     },
   });
