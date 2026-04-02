@@ -75,6 +75,8 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         background_url: data.background_url,
         background_opacity: Number(data.background_opacity ?? 0.85),
         advance_payment: Number(data.advance_payment ?? 20000),
+        widget_opacity: Number((data as any).widget_opacity ?? 0.8),
+        widget_theme: ((data as any).widget_theme ?? 'dark') as 'dark' | 'light',
       }
     : DEFAULT_SETTINGS;
 
