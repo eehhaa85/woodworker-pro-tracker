@@ -16,18 +16,19 @@ const AppLayout = () => {
   const { signOut } = useAuth();
   const { settings } = useSettings();
 
-  // CSS custom properties for widget theming
-  const widgetStyle = {
-    '--widget-opacity': settings.widget_opacity,
-  } as React.CSSProperties;
+  const isLight = settings.widget_theme === 'light';
+  const opacity = settings.widget_opacity;
+  const themeClass = isLight ? 'widget-theme-light' : '';
 
-  const themeClass = settings.widget_theme === 'light' ? 'widget-theme-light' : '';
+  // Header/nav background with user-controlled opacity
+  const chromeBase = isLight ? '0, 0%, 100%' : '220, 12%, 14%';
+  const chromeBg = `hsla(${chromeBase}, ${opacity * 0.7})`;
 
   return (
     <div
-      className={`min-h-screen bg-background flex flex-col ${themeClass}`}
+      className={`min-h-screen flex flex-col ${themeClass}`}
       style={{
-        ...widgetStyle,
+        backgroundColor: isLight ? 'hsl(220 10% 92%)' : 'hsl(220 14% 10%)',
         ...(settings.background_url ? {
           backgroundImage: `url(${settings.background_url})`,
           backgroundSize: 'cover',
@@ -37,7 +38,10 @@ const AppLayout = () => {
       }}
     >
       {/* Header */}
-      <header className="border-b border-border bg-card/50 backdrop-blur-md px-5 py-4 flex items-center justify-between shrink-0 sticky top-0 z-40">
+      <header
+        className="border-b border-border backdrop-blur-md px-5 py-4 flex items-center justify-between shrink-0 sticky top-0 z-40"
+        style={{ backgroundColor: chromeBg }}
+      >
         <h1 className="text-lg font-black tracking-tight text-foreground">
           WORKSHOP<span className="text-primary">TRACKER</span>
         </h1>
@@ -51,7 +55,10 @@ const AppLayout = () => {
       </header>
 
       {/* Desktop nav */}
-      <nav className="hidden md:flex border-b border-border bg-card/30 backdrop-blur-sm px-5 gap-1">
+      <nav
+        className="hidden md:flex border-b border-border backdrop-blur-sm px-5 gap-1"
+        style={{ backgroundColor: `hsla(${chromeBase}, ${opacity * 0.4})` }}
+      >
         {navItems.map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
@@ -77,7 +84,10 @@ const AppLayout = () => {
       </main>
 
       {/* Mobile bottom nav */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 border-t border-border bg-card/70 backdrop-blur-xl flex z-50">
+      <nav
+        className="md:hidden fixed bottom-0 left-0 right-0 border-t border-border backdrop-blur-xl flex z-50"
+        style={{ backgroundColor: chromeBg }}
+      >
         {navItems.map(({ to, icon: Icon, label }) => (
           <NavLink
             key={to}
@@ -94,6 +104,12 @@ const AppLayout = () => {
           </NavLink>
         ))}
       </nav>
+
+      {/* Inject widget opacity as inline style on stat-cards via CSS variable */}
+      <style>{`
+        .stat-card { background: hsla(${isLight ? '0, 0%, 100%' : '220, 12%, 14%'}, ${opacity}) !important; }
+        .stat-card-hero { background: hsla(${isLight ? '0, 0%, 100%' : '220, 12%, 14%'}, ${opacity * 0.75}) !important; }
+      `}</style>
     </div>
   );
 };
