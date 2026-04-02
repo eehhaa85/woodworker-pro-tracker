@@ -109,13 +109,13 @@
 @layer components {
   /* Floating card with glow */
   .stat-card {
-    @apply border border-border rounded-xl p-4 md:p-5 backdrop-blur-sm;
-    background: hsl(var(--card) / var(--widget-opacity, 0.8));
+    @apply border border-border rounded-xl p-4 md:p-5 backdrop-blur-md;
+    background: hsl(var(--card) / 0.8);
     box-shadow:
       0 0 20px hsl(var(--mahogany-glow) / 0.06),
       0 4px 16px hsl(220 15% 5% / 0.4),
       inset 0 1px 0 hsl(220 10% 20% / 0.5);
-    transition: box-shadow 0.3s ease, transform 0.2s ease;
+    transition: box-shadow 0.3s ease, transform 0.2s ease, background 0.3s ease;
   }
   .stat-card:hover {
     box-shadow:
@@ -127,11 +127,12 @@
   /* Hero stat card — glowing */
   .stat-card-hero {
     @apply border border-primary/20 rounded-2xl p-6 md:p-8 backdrop-blur-md relative overflow-hidden;
-    background: hsl(var(--card) / calc(var(--widget-opacity, 0.8) * 0.75));
+    background: hsl(var(--card) / 0.6);
     box-shadow:
       0 0 40px hsl(var(--mahogany-glow) / 0.15),
       0 8px 32px hsl(220 15% 5% / 0.5),
       inset 0 1px 0 hsl(var(--primary) / 0.1);
+    transition: background 0.3s ease;
   }
   .stat-card-hero::before {
     content: '';
@@ -145,7 +146,7 @@
   /* Glassmorphism for modals / elevated surfaces */
   .glass-panel {
     @apply backdrop-blur-xl border border-white/10 rounded-2xl;
-    background: hsl(220 14% 12% / var(--widget-opacity, 0.85));
+    background: hsl(220 14% 12% / 0.85);
     box-shadow:
       0 0 40px hsl(220 15% 5% / 0.5),
       inset 0 1px 0 hsl(220 10% 25% / 0.3);
@@ -153,7 +154,8 @@
 
   /* Dark inputs with focus glow */
   .input-industrial {
-    @apply bg-input border border-border rounded-xl px-4 py-3 placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all text-base;
+    @apply border border-border rounded-xl px-4 py-3 placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50 transition-all text-base;
+    background: hsl(var(--input));
     color: hsl(var(--input-foreground));
     box-shadow: inset 0 2px 6px hsl(220 15% 3% / 0.6);
   }
@@ -180,7 +182,7 @@
   }
 }
 
-/* Light widget theme overrides */
+/* ========= Light widget theme ========= */
 .widget-theme-light {
   --card: 0 0% 100%;
   --card-foreground: 220 14% 15%;
@@ -188,21 +190,23 @@
   --popover-foreground: 220 14% 15%;
   --muted: 220 10% 92%;
   --muted-foreground: 220 8% 40%;
-  --border: 220 10% 85%;
-  --input: 0 0% 96%;
+  --border: 220 10% 82%;
+  --input: 220 10% 96%;
   --input-foreground: 220 14% 15%;
   --foreground: 220 14% 15%;
+  --accent: 16 35% 92%;
+  --accent-foreground: 16 40% 30%;
 }
 
 .widget-theme-light .stat-card {
   box-shadow:
-    0 1px 8px hsl(220 10% 50% / 0.1),
+    0 1px 8px hsl(220 10% 50% / 0.12),
     0 2px 12px hsl(220 10% 50% / 0.06);
 }
 .widget-theme-light .stat-card:hover {
   box-shadow:
-    0 2px 16px hsl(220 10% 50% / 0.15),
-    0 4px 20px hsl(220 10% 50% / 0.08);
+    0 2px 16px hsl(220 10% 50% / 0.18),
+    0 4px 20px hsl(220 10% 50% / 0.1);
 }
 .widget-theme-light .stat-card-hero {
   box-shadow:
@@ -210,17 +214,12 @@
     0 4px 24px hsl(220 10% 50% / 0.08);
 }
 .widget-theme-light .glass-panel {
-  background: hsl(0 0% 100% / var(--widget-opacity, 0.85));
+  background: hsl(0 0% 100% / 0.9);
   border-color: hsl(220 10% 85%);
 }
 .widget-theme-light .input-industrial {
-  box-shadow: inset 0 1px 3px hsl(220 10% 70% / 0.2);
-  color: hsl(220 14% 15%);
+  box-shadow: inset 0 1px 3px hsl(220 10% 70% / 0.15);
 }
 .widget-theme-light .hero-number {
   text-shadow: none;
-}
-.widget-theme-light header,
-.widget-theme-light nav {
-  background: hsl(0 0% 100% / calc(var(--widget-opacity, 0.8) * 0.7)) !important;
 }
