@@ -14,6 +14,8 @@ export interface UserSettings {
   background_url: string | null;
   background_opacity: number;
   advance_payment: number;
+  widget_opacity: number;
+  widget_theme: 'dark' | 'light';
 }
 
 const DEFAULT_SETTINGS: UserSettings = {
@@ -26,6 +28,8 @@ const DEFAULT_SETTINGS: UserSettings = {
   background_url: null,
   background_opacity: 0.85,
   advance_payment: 20000,
+  widget_opacity: 0.8,
+  widget_theme: 'dark',
 };
 
 interface SettingsContextType {
