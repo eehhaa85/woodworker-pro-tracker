@@ -16,15 +16,25 @@ const AppLayout = () => {
   const { signOut } = useAuth();
   const { settings } = useSettings();
 
+  // CSS custom properties for widget theming
+  const widgetStyle = {
+    '--widget-opacity': settings.widget_opacity,
+  } as React.CSSProperties;
+
+  const themeClass = settings.widget_theme === 'light' ? 'widget-theme-light' : '';
+
   return (
     <div
-      className="min-h-screen bg-background flex flex-col"
-      style={settings.background_url ? {
-        backgroundImage: `linear-gradient(to bottom, hsl(220 14% 10% / ${settings.background_opacity}), hsl(220 14% 10% / ${Math.min(settings.background_opacity + 0.07, 1)})), url(${settings.background_url})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundAttachment: 'fixed',
-      } : undefined}
+      className={`min-h-screen bg-background flex flex-col ${themeClass}`}
+      style={{
+        ...widgetStyle,
+        ...(settings.background_url ? {
+          backgroundImage: `url(${settings.background_url})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed',
+        } : undefined),
+      }}
     >
       {/* Header */}
       <header className="border-b border-border bg-card/50 backdrop-blur-md px-5 py-4 flex items-center justify-between shrink-0 sticky top-0 z-40">

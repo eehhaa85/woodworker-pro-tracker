@@ -92,6 +92,8 @@ export type Database = {
           rate_standard: number
           updated_at: string
           user_id: string
+          widget_opacity: number
+          widget_theme: string
         }
         Insert: {
           advance_payment?: number
@@ -107,6 +109,8 @@ export type Database = {
           rate_standard?: number
           updated_at?: string
           user_id: string
+          widget_opacity?: number
+          widget_theme?: string
         }
         Update: {
           advance_payment?: number
@@ -122,6 +126,8 @@ export type Database = {
           rate_standard?: number
           updated_at?: string
           user_id?: string
+          widget_opacity?: number
+          widget_theme?: string
         }
         Relationships: []
       }

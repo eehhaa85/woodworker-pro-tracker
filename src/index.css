@@ -109,7 +109,8 @@
 @layer components {
   /* Floating card with glow */
   .stat-card {
-    @apply bg-card/80 border border-border rounded-xl p-4 md:p-5 backdrop-blur-sm;
+    @apply border border-border rounded-xl p-4 md:p-5 backdrop-blur-sm;
+    background: hsl(var(--card) / var(--widget-opacity, 0.8));
     box-shadow:
       0 0 20px hsl(var(--mahogany-glow) / 0.06),
       0 4px 16px hsl(220 15% 5% / 0.4),
@@ -125,7 +126,8 @@
 
   /* Hero stat card — glowing */
   .stat-card-hero {
-    @apply bg-card/60 border border-primary/20 rounded-2xl p-6 md:p-8 backdrop-blur-md relative overflow-hidden;
+    @apply border border-primary/20 rounded-2xl p-6 md:p-8 backdrop-blur-md relative overflow-hidden;
+    background: hsl(var(--card) / calc(var(--widget-opacity, 0.8) * 0.75));
     box-shadow:
       0 0 40px hsl(var(--mahogany-glow) / 0.15),
       0 8px 32px hsl(220 15% 5% / 0.5),
@@ -143,7 +145,7 @@
   /* Glassmorphism for modals / elevated surfaces */
   .glass-panel {
     @apply backdrop-blur-xl border border-white/10 rounded-2xl;
-    background: hsl(220 14% 12% / 0.85);
+    background: hsl(220 14% 12% / var(--widget-opacity, 0.85));
     box-shadow:
       0 0 40px hsl(220 15% 5% / 0.5),
       inset 0 1px 0 hsl(220 10% 25% / 0.3);
@@ -176,4 +178,49 @@
   .btn-olive {
     @apply border border-secondary text-secondary-foreground bg-transparent hover:bg-secondary/20 rounded-xl transition-all;
   }
+}
+
+/* Light widget theme overrides */
+.widget-theme-light {
+  --card: 0 0% 100%;
+  --card-foreground: 220 14% 15%;
+  --popover: 0 0% 98%;
+  --popover-foreground: 220 14% 15%;
+  --muted: 220 10% 92%;
+  --muted-foreground: 220 8% 40%;
+  --border: 220 10% 85%;
+  --input: 0 0% 96%;
+  --input-foreground: 220 14% 15%;
+  --foreground: 220 14% 15%;
+}
+
+.widget-theme-light .stat-card {
+  box-shadow:
+    0 1px 8px hsl(220 10% 50% / 0.1),
+    0 2px 12px hsl(220 10% 50% / 0.06);
+}
+.widget-theme-light .stat-card:hover {
+  box-shadow:
+    0 2px 16px hsl(220 10% 50% / 0.15),
+    0 4px 20px hsl(220 10% 50% / 0.08);
+}
+.widget-theme-light .stat-card-hero {
+  box-shadow:
+    0 2px 20px hsl(var(--primary) / 0.1),
+    0 4px 24px hsl(220 10% 50% / 0.08);
+}
+.widget-theme-light .glass-panel {
+  background: hsl(0 0% 100% / var(--widget-opacity, 0.85));
+  border-color: hsl(220 10% 85%);
+}
+.widget-theme-light .input-industrial {
+  box-shadow: inset 0 1px 3px hsl(220 10% 70% / 0.2);
+  color: hsl(220 14% 15%);
+}
+.widget-theme-light .hero-number {
+  text-shadow: none;
+}
+.widget-theme-light header,
+.widget-theme-light nav {
+  background: hsl(0 0% 100% / calc(var(--widget-opacity, 0.8) * 0.7)) !important;
 }

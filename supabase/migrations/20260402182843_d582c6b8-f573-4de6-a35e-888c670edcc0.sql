@@ -1,0 +1,2 @@
+ALTER TABLE public.user_settings ADD COLUMN IF NOT EXISTS widget_opacity double precision NOT NULL DEFAULT 0.8;
+ALTER TABLE public.user_settings ADD COLUMN IF NOT EXISTS widget_theme text NOT NULL DEFAULT 'dark';
