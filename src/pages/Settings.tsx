@@ -5,7 +5,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
-import { Save, Upload, X, ImageIcon } from 'lucide-react';
+import { Save, Upload, X, ImageIcon, Sun, Moon } from 'lucide-react';
 import BackupRestore from '@/components/settings/BackupRestore';
 
 const Settings = () => {
@@ -22,9 +22,8 @@ const Settings = () => {
   const [rateHalfSheet, setRateHalfSheet] = useState<number | null>(null);
   const [advancePayment, setAdvancePayment] = useState<number | null>(null);
   const [uploading, setUploading] = useState(false);
-  const [localOpacity, setLocalOpacity] = useState<number | null>(null);
+  const [localWidgetOpacity, setLocalWidgetOpacity] = useState<number | null>(null);
 
-  // Use local state if edited, otherwise settings from DB
   const val = (local: number | null, fallback: number) => local ?? fallback;
 
   const saveMutation = useMutation({
@@ -86,7 +85,6 @@ const Settings = () => {
 
       const bgUrl = urlData.publicUrl + '?t=' + Date.now();
 
-      // Save to settings
       if (settings.id) {
         const { error } = await supabase
           .from('user_settings')
@@ -127,6 +125,21 @@ const Settings = () => {
     }
   };
 
+  const updateWidgetSetting = async (field: string, value: any) => {
+    if (!settings.id) return;
+    await supabase
+      .from('user_settings')
+      .update({ [field]: value } as any)
+      .eq('id', settings.id);
+    queryClient.invalidateQueries({ queryKey: ['user_settings'] });
+  };
+
+  const toggleWidgetTheme = async () => {
+    const newTheme = settings.widget_theme === 'dark' ? 'light' : 'dark';
+    await updateWidgetSetting('widget_theme', newTheme);
+    toast.success(newTheme === 'light' ? 'Светлая тема виджетов' : 'Тёмная тема виджетов');
+  };
+
   if (isLoading) {
     return (
       <div className="max-w-lg mx-auto p-4">
@@ -142,6 +155,8 @@ const Settings = () => {
     { label: 'Целый лист (₽)', value: val(rateFullSheet, settings.rate_full_sheet), set: setRateFullSheet },
     { label: 'Половина листа (₽)', value: val(rateHalfSheet, settings.rate_half_sheet), set: setRateHalfSheet },
   ];
+
+  const currentWidgetOpacity = localWidgetOpacity ?? settings.widget_opacity;
 
   return (
     <div className="max-w-lg mx-auto p-4 md:p-6 space-y-8">
@@ -166,7 +181,6 @@ const Settings = () => {
         <p className="text-xs text-muted-foreground mb-5">Настройте почасовые ставки и расценки за нестинг</p>
 
         <div className="space-y-4">
-          {/* Hourly rates */}
           <div className="stat-card space-y-3">
             <p className="label-industrial text-xs">Почасовые ставки</p>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -185,7 +199,6 @@ const Settings = () => {
             </div>
           </div>
 
-          {/* Nesting rates */}
           <div className="stat-card space-y-3">
             <p className="label-industrial text-xs">Нестинг</p>
             <div className="grid grid-cols-2 gap-3">
@@ -204,7 +217,6 @@ const Settings = () => {
             </div>
           </div>
 
-          {/* Advance payment */}
           <div className="stat-card space-y-3">
             <p className="label-industrial text-xs">Аванс</p>
             <div>
@@ -230,6 +242,67 @@ const Settings = () => {
         </div>
       </div>
 
+      {/* Widget appearance */}
+      <div>
+        <h2 className="text-lg font-black text-foreground mb-1">Оформление виджетов</h2>
+        <p className="text-xs text-muted-foreground mb-5">Прозрачность и цветовая тема карточек</p>
+
+        <div className="space-y-4">
+          {/* Theme toggle */}
+          <div className="stat-card">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="label-industrial text-xs mb-1">Тема виджетов</p>
+                <p className="text-sm text-muted-foreground">
+                  {settings.widget_theme === 'dark' ? 'Тёмная' : 'Светлая'}
+                </p>
+              </div>
+              <button
+                onClick={toggleWidgetTheme}
+                className="p-3 rounded-xl border border-border hover:bg-muted/50 transition-colors"
+              >
+                {settings.widget_theme === 'dark' ? (
+                  <Sun size={20} className="text-warning" />
+                ) : (
+                  <Moon size={20} className="text-foreground" />
+                )}
+              </button>
+            </div>
+          </div>
+
+          {/* Widget opacity */}
+          <div className="stat-card space-y-3">
+            <div className="flex items-center justify-between">
+              <p className="label-industrial text-xs">Прозрачность виджетов</p>
+              <span className="text-xs font-display text-foreground">{Math.round(currentWidgetOpacity * 100)}%</span>
+            </div>
+            <input
+              type="range"
+              min={20}
+              max={100}
+              step={5}
+              value={Math.round(currentWidgetOpacity * 100)}
+              onChange={(e) => setLocalWidgetOpacity(Number(e.target.value) / 100)}
+              onMouseUp={async () => {
+                if (localWidgetOpacity == null) return;
+                await updateWidgetSetting('widget_opacity', localWidgetOpacity);
+                setLocalWidgetOpacity(null);
+              }}
+              onTouchEnd={async () => {
+                if (localWidgetOpacity == null) return;
+                await updateWidgetSetting('widget_opacity', localWidgetOpacity);
+                setLocalWidgetOpacity(null);
+              }}
+              className="w-full accent-primary h-2 rounded-full appearance-none bg-muted cursor-pointer"
+            />
+            <div className="flex justify-between text-[10px] text-muted-foreground">
+              <span>Прозрачно</span>
+              <span>Непрозрачно</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Background */}
       <div>
         <h2 className="text-lg font-black text-foreground mb-1">Фон приложения</h2>
@@ -245,48 +318,6 @@ const Settings = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-
-              {/* Opacity slider */}
-              <div>
-                <div className="flex items-center justify-between mb-2">
-                  <label className="text-xs text-muted-foreground">Прозрачность затемнения</label>
-                  <span className="text-xs font-display text-foreground">{Math.round((localOpacity ?? settings.background_opacity) * 100)}%</span>
-                </div>
-                <input
-                  type="range"
-                  min={0}
-                  max={100}
-                  step={5}
-                  value={Math.round((localOpacity ?? settings.background_opacity) * 100)}
-                  onChange={(e) => {
-                    setLocalOpacity(Number(e.target.value) / 100);
-                  }}
-                  onMouseUp={async () => {
-                    if (localOpacity == null || !settings.id) return;
-                    await supabase
-                      .from('user_settings')
-                      .update({ background_opacity: localOpacity } as any)
-                      .eq('id', settings.id);
-                    queryClient.invalidateQueries({ queryKey: ['user_settings'] });
-                    setLocalOpacity(null);
-                  }}
-                  onTouchEnd={async () => {
-                    if (localOpacity == null || !settings.id) return;
-                    await supabase
-                      .from('user_settings')
-                      .update({ background_opacity: localOpacity } as any)
-                      .eq('id', settings.id);
-                    queryClient.invalidateQueries({ queryKey: ['user_settings'] });
-                    setLocalOpacity(null);
-                  }}
-                  className="w-full accent-primary h-2 rounded-full appearance-none bg-muted cursor-pointer"
-                />
-                <div className="flex justify-between text-[10px] text-muted-foreground mt-1">
-                  <span>Прозрачно</span>
-                  <span>Затемнено</span>
-                </div>
-              </div>
-
               <Button
                 variant="outline"
                 onClick={handleRemoveBackground}
