@@ -16,6 +16,7 @@ export interface UserSettings {
   advance_payment: number;
   widget_opacity: number;
   widget_theme: 'dark' | 'light';
+  hidden_projects: string[];
 }
 
 const DEFAULT_SETTINGS: UserSettings = {
