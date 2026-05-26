@@ -18,8 +18,8 @@
     --popover: 220 14% 12%;
     --popover-foreground: 220 12% 96%;
 
-    /* Warm amber-gold — bright, high contrast, easier on the eyes than deep orange */
-    --primary: 38 75% 68%;
+    /* Aquamarine — bright, high contrast, easier on the eyes */
+    --primary: 165 70% 60%;
     --primary-foreground: 220 14% 10%;
 
     /* Olive Drab — muted military green for secondary */
@@ -40,18 +40,18 @@
     /* Input — deeper black with warm undertone */
     --input: 220 12% 8%;
     --input-foreground: 220 10% 85%;
-    --ring: 38 75% 68%;
+    --ring: 165 70% 60%;
 
     --radius: 0.75rem;
 
     --sidebar-background: 220 14% 11%;
     --sidebar-foreground: 220 10% 72%;
-    --sidebar-primary: 38 75% 68%;
-    --sidebar-primary-foreground: 20 15% 95%;
+    --sidebar-primary: 165 70% 60%;
+    --sidebar-primary-foreground: 220 14% 10%;
     --sidebar-accent: 220 10% 16%;
     --sidebar-accent-foreground: 220 12% 96%;
     --sidebar-border: 220 10% 18%;
-    --sidebar-ring: 38 75% 68%;
+    --sidebar-ring: 165 70% 60%;
 
     /* Extended palette */
     --steel: 220 8% 40%;
