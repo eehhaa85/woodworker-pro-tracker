@@ -9,6 +9,7 @@ import { toast } from 'sonner';
 import { format } from 'date-fns';
 import { Trash2, Pencil, Clock } from 'lucide-react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import ProjectAutocomplete from '@/components/ProjectAutocomplete';
 
 const Index = () => {
   const { user } = useAuth();
@@ -317,18 +318,12 @@ const Index = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="label-industrial block mb-1.5">Проект</label>
-              <input
-                list="project-suggestions"
+              <ProjectAutocomplete
                 value={projectName}
-                onChange={e => setProjectName(e.target.value)}
-                className="input-industrial w-full"
+                onChange={setProjectName}
+                suggestions={allProjectNames as string[]}
                 placeholder="Начните вводить..."
               />
-              <datalist id="project-suggestions">
-                {allProjectNames.map((name: string) => (
-                  <option key={name} value={name} />
-                ))}
-              </datalist>
             </div>
             <div>
               <label className="label-industrial block mb-1.5">Предмет</label>
