@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import { Trash2, CalendarIcon, X, Pencil } from 'lucide-react';
+import { Trash2, CalendarIcon, X, Pencil, Filter } from 'lucide-react';
 import { formatRub, getEntryHours } from '@/lib/rates';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -18,6 +18,7 @@ interface EntryHistoryProps {
 
 const EntryHistory = ({ entries }: EntryHistoryProps) => {
   const [filterDate, setFilterDate] = useState<Date | undefined>(undefined);
+  const [filterProject, setFilterProject] = useState<string>('');
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -36,15 +37,80 @@ const EntryHistory = ({ entries }: EntryHistoryProps) => {
     navigate('/', { state: { editEntry: entry } });
   };
 
-  const filteredEntries = filterDate
-    ? entries.filter((e) => e.date === format(filterDate, 'yyyy-MM-dd'))
-    : entries;
+  const projectOptions = useMemo(() => {
+    const set = new Map<string, string>();
+    for (const e of entries) {
+      const isSerial = e.product_quantity > 0 && e.products;
+      const raw = isSerial ? 'TR' : (e.project_name || '').trim();
+      if (!raw) continue;
+      const key = raw.toLowerCase();
+      if (!set.has(key)) set.set(key, raw);
+    }
+    return Array.from(set.entries()).map(([key, name]) => ({ key, name })).sort((a, b) => a.name.localeCompare(b.name));
+  }, [entries]);
+
+  const filteredEntries = useMemo(() => {
+    return entries.filter(e => {
+      if (filterDate && e.date !== format(filterDate, 'yyyy-MM-dd')) return false;
+      if (filterProject) {
+        const isSerial = e.product_quantity > 0 && e.products;
+        const raw = isSerial ? 'TR' : (e.project_name || '').trim();
+        if (raw.toLowerCase() !== filterProject) return false;
+      }
+      return true;
+    });
+  }, [entries, filterDate, filterProject]);
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
         <p className="label-industrial text-xs">История записей</p>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className={cn(
+                  'h-8 gap-1.5 text-xs border-border',
+                  filterProject && 'border-primary/50 text-primary'
+                )}
+              >
+                <Filter size={12} />
+                {filterProject
+                  ? projectOptions.find(o => o.key === filterProject)?.name ?? 'Проект'
+                  : 'Фильтр по проекту'}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="p-1 w-56 max-h-72 overflow-auto" align="end">
+              {projectOptions.length === 0 ? (
+                <p className="text-xs text-muted-foreground p-2">Нет проектов</p>
+              ) : (
+                projectOptions.map(o => (
+                  <button
+                    key={o.key}
+                    onClick={() => setFilterProject(o.key)}
+                    className={cn(
+                      'block w-full text-left px-2 py-1.5 rounded text-sm hover:bg-accent/40',
+                      filterProject === o.key && 'bg-accent/40 text-primary'
+                    )}
+                  >
+                    {o.name}
+                  </button>
+                ))
+              )}
+            </PopoverContent>
+          </Popover>
+          {filterProject && (
+            <Button
+              variant="ghost"
+              size="sm"
+              className="h-8 w-8 p-0 text-muted-foreground hover:text-foreground"
+              onClick={() => setFilterProject('')}
+            >
+              <X size={14} />
+            </Button>
+          )}
           <Popover>
             <PopoverTrigger asChild>
               <Button
@@ -84,7 +150,7 @@ const EntryHistory = ({ entries }: EntryHistoryProps) => {
 
       {filteredEntries.length === 0 ? (
         <p className="text-muted-foreground text-sm">
-          {filterDate ? 'Нет записей за эту дату' : 'Записей пока нет'}
+          {filterDate || filterProject ? 'Нет записей по заданным фильтрам' : 'Записей пока нет'}
         </p>
       ) : (
         <div className="space-y-2">

@@ -8,26 +8,26 @@
   :root {
     /* Deep matte anthracite background */
     --background: 220 14% 10%;
-    /* Ghost white foreground — soft, not pure white */
-    --foreground: 220 10% 88%;
+    /* Bright ghost white — high contrast */
+    --foreground: 220 12% 96%;
 
     /* Cards — slightly lighter anthracite with transparency */
     --card: 220 12% 14%;
-    --card-foreground: 220 10% 88%;
+    --card-foreground: 220 12% 96%;
 
     --popover: 220 14% 12%;
-    --popover-foreground: 220 10% 88%;
+    --popover-foreground: 220 12% 96%;
 
-    /* Mahogany / Burnt Sienna — rich, deep accent */
-    --primary: 12 45% 38%;
-    --primary-foreground: 20 15% 95%;
+    /* Warm amber-gold — bright, high contrast, easier on the eyes than deep orange */
+    --primary: 38 75% 68%;
+    --primary-foreground: 220 14% 10%;
 
     /* Olive Drab — muted military green for secondary */
     --secondary: 82 25% 32%;
     --secondary-foreground: 80 10% 92%;
 
     --muted: 220 10% 20%;
-    --muted-foreground: 220 8% 55%;
+    --muted-foreground: 220 10% 72%;
 
     /* Accent — warm mahogany glow */
     --accent: 16 40% 30%;
@@ -40,18 +40,18 @@
     /* Input — deeper black with warm undertone */
     --input: 220 12% 8%;
     --input-foreground: 220 10% 85%;
-    --ring: 12 45% 38%;
+    --ring: 38 75% 68%;
 
     --radius: 0.75rem;
 
     --sidebar-background: 220 14% 11%;
-    --sidebar-foreground: 220 8% 55%;
-    --sidebar-primary: 12 45% 38%;
+    --sidebar-foreground: 220 10% 72%;
+    --sidebar-primary: 38 75% 68%;
     --sidebar-primary-foreground: 20 15% 95%;
     --sidebar-accent: 220 10% 16%;
-    --sidebar-accent-foreground: 220 10% 88%;
+    --sidebar-accent-foreground: 220 12% 96%;
     --sidebar-border: 220 10% 18%;
-    --sidebar-ring: 12 45% 38%;
+    --sidebar-ring: 38 75% 68%;
 
     /* Extended palette */
     --steel: 220 8% 40%;
