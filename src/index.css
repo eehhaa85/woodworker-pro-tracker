@@ -8,19 +8,19 @@
   :root {
     /* Deep matte anthracite background */
     --background: 220 14% 10%;
-    /* Ghost white foreground — soft, not pure white */
-    --foreground: 220 10% 88%;
+    /* Bright ghost white — high contrast */
+    --foreground: 220 12% 96%;
 
     /* Cards — slightly lighter anthracite with transparency */
     --card: 220 12% 14%;
-    --card-foreground: 220 10% 88%;
+    --card-foreground: 220 12% 96%;
 
     --popover: 220 14% 12%;
-    --popover-foreground: 220 10% 88%;
+    --popover-foreground: 220 12% 96%;
 
-    /* Mahogany / Burnt Sienna — rich, deep accent */
-    --primary: 12 45% 38%;
-    --primary-foreground: 20 15% 95%;
+    /* Warm amber-gold — bright, high contrast, easier on the eyes than deep orange */
+    --primary: 38 75% 68%;
+    --primary-foreground: 220 14% 10%;
 
     /* Olive Drab — muted military green for secondary */
     --secondary: 82 25% 32%;
