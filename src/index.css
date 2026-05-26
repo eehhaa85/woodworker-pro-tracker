@@ -46,12 +46,12 @@
 
     --sidebar-background: 220 14% 11%;
     --sidebar-foreground: 220 10% 72%;
-    --sidebar-primary: 38 75% 68%;
-    --sidebar-primary-foreground: 20 15% 95%;
+    --sidebar-primary: 165 70% 60%;
+    --sidebar-primary-foreground: 220 14% 10%;
     --sidebar-accent: 220 10% 16%;
     --sidebar-accent-foreground: 220 12% 96%;
     --sidebar-border: 220 10% 18%;
-    --sidebar-ring: 38 75% 68%;
+    --sidebar-ring: 165 70% 60%;
 
     /* Extended palette */
     --steel: 220 8% 40%;
