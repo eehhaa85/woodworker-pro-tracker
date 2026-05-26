@@ -26,7 +26,7 @@ const AppLayout = () => {
 
   return (
     <div
-      className={`min-h-screen flex flex-col ${themeClass}`}
+      className={`min-h-screen flex flex-col text-foreground ${themeClass}`}
       style={{
         backgroundColor: isLight ? 'hsl(220 10% 92%)' : 'hsl(220 14% 10%)',
         ...(settings.background_url ? {
