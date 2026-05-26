@@ -31,6 +31,7 @@ const DEFAULT_SETTINGS: UserSettings = {
   advance_payment: 20000,
   widget_opacity: 0.8,
   widget_theme: 'dark',
+  hidden_projects: [],
 };
 
 interface SettingsContextType {
@@ -78,6 +79,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         advance_payment: Number(data.advance_payment ?? 20000),
         widget_opacity: Number((data as any).widget_opacity ?? 0.8),
         widget_theme: ((data as any).widget_theme ?? 'dark') as 'dark' | 'light',
+        hidden_projects: ((data as any).hidden_projects ?? []) as string[],
       }
     : DEFAULT_SETTINGS;
 
