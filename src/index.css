@@ -18,9 +18,9 @@
     --popover: 220 14% 12%;
     --popover-foreground: 220 12% 96%;
 
-    /* Aquamarine — bright, high contrast, easier on the eyes */
-    --primary: 165 70% 60%;
-    --primary-foreground: 220 14% 10%;
+    /* Deep emerald (#053931) */
+    --primary: 171 84% 12%;
+    --primary-foreground: 220 12% 96%;
 
     /* Olive Drab — muted military green for secondary */
     --secondary: 82 25% 32%;
